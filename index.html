@@ -1,0 +1,1957 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Tạo mới quy trình góp ý</title>
+  <link
+    rel="stylesheet"
+    href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20,400,0,0"
+  />
+  <link rel="stylesheet" href="assets/css/styles.css" />
+</head>
+
+<body>
+  <div id="appLayout" class="app-layout">
+    <aside class="workflow-menu app-create-left-menu">
+      <div class="workflow-brand">
+        <div class="brand-orbit">✦</div>
+        <div>
+          <div class="workflow-brand-title">Genco3 Workflow</div>
+          <div class="workflow-brand-subtitle">Toàn bộ quy trình</div>
+        </div>
+        <span class="material-symbols-outlined brand-collapse">chevron_left</span>
+      </div>
+
+      <nav class="workflow-nav">
+        <a class="workflow-nav-item" href="#">
+          <span class="material-symbols-outlined">pending_actions</span>
+          Cần xử lý
+          <span class="nav-badge blue">31</span>
+        </a>
+
+        <div class="workflow-nav-label">Quản lý hồ sơ</div>
+
+        <a class="workflow-nav-item" href="#">
+          <span class="material-symbols-outlined">person</span>
+          Hồ sơ của tôi
+        </a>
+
+        <button class="workflow-nav-item active" type="button">
+          <span class="material-symbols-outlined">add</span>
+          Tạo quy trình
+        </button>
+
+        <button class="workflow-nav-item" type="button" data-go-list>
+          <span class="material-symbols-outlined">folder_open</span>
+          Tất cả hồ sơ
+        </button>
+
+        <a class="workflow-nav-item" href="#">
+          <span class="material-symbols-outlined">category</span>
+          Danh mục quy trình
+        </a>
+
+        <a class="workflow-nav-item" href="#">
+          <span class="material-symbols-outlined">inventory_2</span>
+          Đã xử lý
+          <span class="nav-badge orange">6</span>
+        </a>
+
+        <a class="workflow-nav-item" href="#">
+          <span class="material-symbols-outlined">task_alt</span>
+          Hoàn thành
+        </a>
+
+        <a class="workflow-nav-item" href="#">
+          <span class="material-symbols-outlined">draft</span>
+          Bản nháp
+        </a>
+
+        <a class="workflow-nav-item" href="#">
+          <span class="material-symbols-outlined">do_not_disturb_on</span>
+          Đã hủy / Từ chối
+        </a>
+      </nav>
+
+      <div class="workflow-menu-footer">
+        <a class="workflow-nav-item" href="#">
+          <span class="material-symbols-outlined">notifications</span>
+          Thông báo
+          <span class="nav-badge red">247</span>
+        </a>
+
+        <div class="workflow-account">
+          <span class="workflow-avatar"></span>
+          <div>
+            <div class="workflow-account-name">GENCO 3</div>
+            <div class="workflow-account-mail">genco3workflow@genco3...</div>
+          </div>
+          <span class="material-symbols-outlined">more_vert</span>
+        </div>
+      </div>
+    </aside>
+
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <a class="sidebar-logo" href="#">
+          <span class="logo-mark">DT</span>
+          <span class="logo-text">App Dự thảo</span>
+        </a>
+
+        <button
+          id="sidebarToggle"
+          class="sidebar-toggle"
+          type="button"
+          aria-label="Thu gọn menu"
+          aria-expanded="true"
+        >
+          <span id="sidebarToggleIcon">‹</span>
+        </button>
+      </div>
+
+      <nav class="sidebar-nav">
+        <a href="#" class="nav-item">
+          <span class="nav-icon">▣</span>
+          <span class="nav-label">Hồ sơ của tôi</span>
+        </a>
+
+        <a href="#" class="nav-item active">
+          <span class="nav-icon">＋</span>
+          <span class="nav-label">Tạo hồ sơ</span>
+        </a>
+      </nav>
+    </aside>
+
+    <button
+      id="sidebarBackdrop"
+      class="sidebar-backdrop"
+      type="button"
+      aria-label="Đóng menu"
+    ></button>
+
+    <div class="app-content">
+      <header class="app-header">
+        <button
+          id="mobileMenuButton"
+          class="mobile-menu-button"
+          type="button"
+          aria-label="Mở menu"
+          aria-expanded="false"
+        >
+          ☰
+        </button>
+
+        <div class="header-title">Tạo mới quy trình góp ý</div>
+
+        <div class="user-area">
+          <div class="user-info">
+            <div class="user-name">Nguyễn Minh Anh</div>
+            <div class="user-unit">Ban Pháp chế</div>
+          </div>
+
+          <div class="avatar">MA</div>
+        </div>
+      </header>
+
+      <main class="page">
+        <section class="page-heading">
+          <button id="backButton" class="back-button" type="button">←</button>
+
+          <div>
+            <div class="eyebrow">Quy trình góp ý dự thảo</div>
+
+            <h1 class="page-title">
+              Tạo mới hồ sơ
+            </h1>
+          </div>
+        </section>
+
+        <form id="createForm" novalidate>
+          <section class="section">
+            <div class="section-header">
+              <h2 class="section-title">Thông tin chung</h2>
+            </div>
+
+            <div class="section-body">
+              <div class="form-grid">
+                <div class="field">
+                  <div class="label-row">
+                    <label for="title">
+                      Tiêu đề <span class="required">*</span>
+                    </label>
+
+                    <span id="titleCounter" class="counter">0/200</span>
+                  </div>
+
+                  <input
+                    id="title"
+                    maxlength="200"
+                    placeholder="Nhập tiêu đề quy trình góp ý"
+                  />
+
+                  <div id="titleError" class="error">
+                    Vui lòng nhập Tiêu đề.
+                  </div>
+                </div>
+
+                <div class="field">
+                  <div class="label-row">
+                    <label for="dueDate">
+                      Hạn xử lý <span class="required">*</span>
+                    </label>
+                  </div>
+
+                  <input id="dueDate" type="date" />
+
+                  <div id="dueDateError" class="error">
+                    Vui lòng chọn Hạn xử lý.
+                  </div>
+                </div>
+
+                <div class="field full">
+                  <div class="label-row">
+                    <label for="note">Ghi chú</label>
+                    <span id="noteCounter" class="counter">0/2000</span>
+                  </div>
+
+                  <textarea
+                    id="note"
+                    maxlength="2000"
+                    placeholder="Nhập nội dung ghi chú"
+                  ></textarea>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <section class="section">
+            <div class="section-header">
+              <h2 class="section-title">Văn bản</h2>
+            </div>
+
+            <div class="section-body">
+              <div class="upload-group">
+                <div>
+                  <div class="upload-label">
+                    Văn bản dự thảo <span class="required">*</span>
+                  </div>
+
+                  <label id="draftDropzone" class="dropzone" for="draftInput">
+                    <div class="dropzone-icon">⇧</div>
+
+                    <div>
+                      <div class="dropzone-title">
+                        Kéo thả Văn bản dự thảo hoặc <span>chọn file</span>
+                      </div>
+
+                      <div class="dropzone-note">
+                        Chỉ hỗ trợ .docx · Tối đa 50 file · Tối đa 50MB/file
+                      </div>
+                    </div>
+
+                    <div class="dropzone-action">Chọn file</div>
+                  </label>
+
+                  <input
+                    id="draftInput"
+                    class="file-input"
+                    type="file"
+                    accept=".docx"
+                    multiple
+                  />
+
+                  <div id="draftList" class="file-list"></div>
+
+                  <div id="draftError" class="error">
+                    Vui lòng tải lên Văn bản dự thảo.
+                  </div>
+                </div>
+
+                <div>
+                  <div class="upload-label">Văn bản đính kèm</div>
+
+                  <label
+                    id="attachmentDropzone"
+                    class="dropzone"
+                    for="attachmentInput"
+                  >
+                    <div class="dropzone-icon">⇧</div>
+
+                    <div>
+                      <div class="dropzone-title">
+                        Kéo thả Văn bản đính kèm hoặc <span>chọn file</span>
+                      </div>
+
+                      <div class="dropzone-note">
+                        Word, Excel, PowerPoint, PDF · Tối đa 50 file
+                      </div>
+                    </div>
+
+                    <div class="dropzone-action">Chọn file</div>
+                  </label>
+
+                  <input
+                    id="attachmentInput"
+                    class="file-input"
+                    type="file"
+                    accept=".doc,.docx,.xls,.xlsx,.ppt,.pptx,.pdf"
+                    multiple
+                  />
+
+                  <div id="attachmentList" class="file-list"></div>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <section class="section">
+            <div class="section-header">
+              <h2 class="section-title">Người góp ý & CC</h2>
+            </div>
+
+            <div class="section-body">
+      <div class="people-grid">
+        <div class="people-card">
+                  <div class="people-header">
+                    <div class="people-title">
+                      Người góp ý <span class="required">*</span>
+                    </div>
+
+                    <button
+                      id="addCommenterButton"
+                      class="genco-button genco-button--secondary genco-button--small people-add-button"
+                      type="button"
+                    >
+                      <span class="genco-button__icon" aria-hidden="true">
+                        <svg viewBox="0 0 24 24" focusable="false">
+                          <path
+                            fill="currentColor"
+                            d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2Z"
+                          ></path>
+                        </svg>
+                      </span>
+                      Thêm người góp ý
+                    </button>
+                  </div>
+
+                  <div id="commenterList"></div>
+
+                  <div id="commenterError" class="error">
+                    Vui lòng chọn Người góp ý.
+                  </div>
+                </div>
+
+                <div class="people-card">
+                  <div class="people-header">
+                    <div class="people-title">
+                      Người CC
+                    </div>
+
+                    <button
+                      id="addCcButton"
+                      class="genco-button genco-button--secondary genco-button--small people-add-button"
+                      type="button"
+                    >
+                      <span class="genco-button__icon" aria-hidden="true">
+                        <svg viewBox="0 0 24 24" focusable="false">
+                          <path
+                            fill="currentColor"
+                            d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2Z"
+                          ></path>
+                        </svg>
+                      </span>
+                      Thêm người CC
+                    </button>
+                  </div>
+
+                  <div id="ccList"></div>
+                </div>
+              </div>
+            </div>
+          </section>
+        </form>
+      </main>
+
+      <footer class="action-bar">
+        <div class="action-inner">
+          <div class="action-note">
+            Các trường có dấu <span class="required">*</span> là bắt buộc.
+          </div>
+
+          <div class="action-buttons">
+            <button
+              id="cancelButton"
+              class="genco-button genco-button--secondary"
+              type="button"
+            >
+              <span class="genco-button__icon" aria-hidden="true">
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  focusable="false"
+                >
+                  <path d="M15 18l-6-6 6-6"></path>
+                </svg>
+              </span>
+              Quay lại
+            </button>
+
+            <button
+              id="createButton"
+              class="genco-button genco-button--primary"
+              type="submit"
+              form="createForm"
+            >
+              <span class="material-symbols-outlined">add_circle</span>
+              Tạo mới
+            </button>
+          </div>
+        </div>
+      </footer>
+    </div>
+  </div>
+
+  <div id="listView" class="workflow-shell screen-hidden">
+    <header class="workflow-topbar">
+      <div class="topbar-left">
+        <span class="material-symbols-outlined">apps</span>
+        <span class="topbar-product">Power Apps</span>
+        <span class="topbar-divider"></span>
+        <span class="topbar-title">WF-Trung Tâm Quản Lý Quy Trình Số</span>
+        <span class="material-symbols-outlined topbar-info">info</span>
+      </div>
+
+      <div class="topbar-actions">
+        <button class="topbar-share" type="button">
+          <span class="material-symbols-outlined">ios_share</span>
+          Share
+          <span class="material-symbols-outlined">expand_more</span>
+        </button>
+        <span class="material-symbols-outlined">fullscreen</span>
+        <span class="material-symbols-outlined">download</span>
+        <span class="material-symbols-outlined">settings</span>
+        <span class="material-symbols-outlined">help</span>
+        <span class="workflow-avatar"></span>
+      </div>
+    </header>
+
+    <div class="workflow-layout">
+      <aside class="workflow-menu">
+        <div class="workflow-brand">
+          <div class="brand-orbit">✦</div>
+          <div>
+            <div class="workflow-brand-title">Genco3 Workflow</div>
+            <div class="workflow-brand-subtitle">Toàn bộ quy trình</div>
+          </div>
+          <span class="material-symbols-outlined brand-collapse">chevron_left</span>
+        </div>
+
+        <nav class="workflow-nav">
+          <a class="workflow-nav-item" href="#">
+            <span class="material-symbols-outlined">pending_actions</span>
+            Cần xử lý
+            <span class="nav-badge blue">31</span>
+          </a>
+
+          <div class="workflow-nav-label">Quản lý hồ sơ</div>
+
+          <a class="workflow-nav-item" href="#">
+            <span class="material-symbols-outlined">person</span>
+            Hồ sơ của tôi
+          </a>
+
+          <button id="listCreateProcessButton" class="workflow-nav-item" type="button">
+            <span class="material-symbols-outlined">add</span>
+            Tạo quy trình
+          </button>
+
+          <a class="workflow-nav-item active" href="#">
+            <span class="material-symbols-outlined">folder_open</span>
+            Tất cả hồ sơ
+          </a>
+
+          <a class="workflow-nav-item" href="#">
+            <span class="material-symbols-outlined">category</span>
+            Danh mục quy trình
+          </a>
+
+          <a class="workflow-nav-item" href="#">
+            <span class="material-symbols-outlined">inventory_2</span>
+            Đã xử lý
+            <span class="nav-badge orange">6</span>
+          </a>
+
+          <a class="workflow-nav-item" href="#">
+            <span class="material-symbols-outlined">task_alt</span>
+            Hoàn thành
+          </a>
+
+          <a class="workflow-nav-item" href="#">
+            <span class="material-symbols-outlined">draft</span>
+            Bản nháp
+          </a>
+
+          <a class="workflow-nav-item" href="#">
+            <span class="material-symbols-outlined">do_not_disturb_on</span>
+            Đã hủy / Từ chối
+          </a>
+        </nav>
+
+        <div class="workflow-menu-footer">
+          <a class="workflow-nav-item" href="#">
+            <span class="material-symbols-outlined">notifications</span>
+            Thông báo
+            <span class="nav-badge red">247</span>
+          </a>
+
+          <div class="workflow-account">
+            <span class="workflow-avatar"></span>
+            <div>
+              <div class="workflow-account-name">GENCO 3</div>
+              <div class="workflow-account-mail">genco3workflow@genco3...</div>
+            </div>
+            <span class="material-symbols-outlined">more_vert</span>
+          </div>
+        </div>
+      </aside>
+
+      <section class="draft-list-panel">
+        <div class="draft-list-header">
+          <div class="draft-list-title">
+            <span class="material-symbols-outlined">view_list</span>
+            <strong>Tất cả hồ sơ</strong>
+          </div>
+          <span class="draft-total">48</span>
+        </div>
+
+        <div class="draft-tools">
+          <label class="draft-search">
+            <span class="material-symbols-outlined">search</span>
+            <input placeholder="Tìm kiếm quy trình..." />
+          </label>
+          <button class="draft-tool-button" type="button">
+            <span class="material-symbols-outlined">refresh</span>
+          </button>
+          <button class="draft-tool-button" type="button">
+            <span class="material-symbols-outlined">filter_list</span>
+          </button>
+        </div>
+
+        <div class="draft-cards">
+          <button class="draft-card" type="button">
+            <div class="draft-type">Quy trình góp ý dự thảo của các Ban, VP</div>
+            <div class="draft-card-title">CuongtestCCGopy</div>
+            <span class="draft-chip">Góp ý</span>
+            <div class="draft-meta">
+              <span class="material-symbols-outlined">schedule</span>
+              12/07/2026
+              <span class="meta-divider"></span>
+              <span class="material-symbols-outlined">person</span>
+              GENCO 3
+            </div>
+          </button>
+
+          <button class="draft-card" type="button">
+            <div class="draft-type">Quy trình góp ý dự thảo của các Ban, VP</div>
+            <div class="draft-card-title">Cuong 1231</div>
+            <span class="draft-chip">Góp ý</span>
+            <div class="draft-meta">
+              <span class="material-symbols-outlined">schedule</span>
+              12/07/2026
+              <span class="meta-divider"></span>
+              <span class="material-symbols-outlined">person</span>
+              GENCO 3
+            </div>
+          </button>
+
+          <button class="draft-card" type="button">
+            <div class="draft-type">Quy trình góp ý dự thảo của các Ban, VP</div>
+            <div class="draft-card-title">cho g3 CC gopy</div>
+            <span class="draft-chip">Góp ý</span>
+            <div class="draft-meta">
+              <span class="material-symbols-outlined">schedule</span>
+              12/07/2026
+              <span class="meta-divider"></span>
+              <span class="material-symbols-outlined">person</span>
+              DEV 01
+            </div>
+          </button>
+
+          <button class="draft-card active" type="button">
+            <div class="draft-type">Quy trình góp ý dự thảo của các Ban, VP</div>
+            <div id="createdDraftCardTitle" class="draft-card-title">67868</div>
+            <span class="draft-chip">Tạo mới</span>
+            <div class="draft-meta">
+              <span class="material-symbols-outlined">schedule</span>
+              <span id="createdDraftCardDate">12/07/2026</span>
+              <span class="meta-divider"></span>
+              <span class="material-symbols-outlined">person</span>
+              GENCO 3
+            </div>
+          </button>
+
+          <button class="draft-card" type="button">
+            <div class="draft-type">Quy trình góp ý dự thảo của các Ban, VP</div>
+            <div class="draft-card-title">test gui email</div>
+            <span class="draft-chip">Góp ý</span>
+            <div class="draft-meta">
+              <span class="material-symbols-outlined">schedule</span>
+              12/07/2026
+              <span class="meta-divider"></span>
+              <span class="material-symbols-outlined">person</span>
+              GENCO 3
+            </div>
+          </button>
+
+          <button class="draft-card" type="button">
+            <div class="draft-type">Quy trình góp ý dự thảo của các Ban, VP</div>
+            <div class="draft-card-title">test chieu cn</div>
+            <span class="draft-chip blue">Góp ý</span>
+            <div class="draft-meta">
+              <span class="material-symbols-outlined">schedule</span>
+              12/07/2026
+              <span class="meta-divider"></span>
+              <span class="material-symbols-outlined">person</span>
+              GENCO 3
+            </div>
+          </button>
+        </div>
+      </section>
+
+      <main class="draft-detail-panel">
+        <section class="workflow-overview" data-workflow-overview>
+          <header class="draft-detail-header workflow-overview-header">
+            <div class="draft-title-block">
+              <div class="draft-title-row workflow-title-surface">
+                <h1 id="detailDraftTitle" class="workflow-overview-title">
+                  67868
+                </h1>
+
+                <div class="workflow-title-actions">
+                  <button
+                    class="workflow-inline-action"
+                    type="button"
+                    title="Copy tiêu đề"
+                    aria-label="Copy tiêu đề"
+                    data-copy-target="detailDraftTitle"
+                  >
+                    <span class="material-symbols-outlined">content_copy</span>
+                  </button>
+                  <button
+                    class="workflow-inline-action"
+                    type="button"
+                    title="Chia sẻ tiêu đề"
+                    aria-label="Chia sẻ tiêu đề"
+                    data-share-target="detailDraftTitle"
+                  >
+                    <span class="material-symbols-outlined">share</span>
+                  </button>
+                </div>
+              </div>
+
+              <div class="draft-detail-meta workflow-overview-meta">
+                <span class="detail-meta-item workflow-code-item">
+                  <span id="detailDraftCode" class="workflow-code-value">
+                    QT-DU-THAO-2607-055
+                  </span>
+                  <button
+                    class="workflow-inline-action workflow-code-copy"
+                    type="button"
+                    title="Copy mã dự thảo"
+                    aria-label="Copy mã dự thảo"
+                    data-copy-target="detailDraftCode"
+                  >
+                    <span class="material-symbols-outlined">content_copy</span>
+                  </button>
+                </span>
+                <span class="workflow-meta-separator">|</span>
+                <span class="detail-meta-item workflow-creator-item">
+                  <span class="workflow-meta-label">Người tạo :</span>
+                  <span class="creator-profile">
+                    <strong id="detailCreatorName" class="creator-link">
+                      Nguyễn Minh Anh
+                    </strong>
+                    <span class="creator-tooltip">
+                      <span id="detailCreatorPosition">Chuyên viên chính</span>
+                      <span id="detailCreatorDepartment">Ban Pháp chế</span>
+                      <span id="detailCreatorEmail">nguyen.minh.anh@genco3.vn</span>
+                    </span>
+                  </span>
+                </span>
+                <span class="workflow-meta-separator">|</span>
+                <span id="detailCreatedAt" class="workflow-created-at">
+                  12/07/2026 16:18
+                </span>
+              </div>
+            </div>
+
+            <div class="workflow-overview-actions">
+              <button
+                class="detail-expand-button"
+                type="button"
+                title="Ẩn / hiện danh sách hồ sơ"
+                aria-label="Ẩn / hiện danh sách hồ sơ"
+                data-expand-detail
+              >
+                <span class="material-symbols-outlined">open_in_full</span>
+              </button>
+              <button
+                class="detail-expand-button"
+                type="button"
+                title="Ẩn / hiện tiến trình"
+                aria-label="Ẩn / hiện tiến trình"
+                data-toggle-progress
+              >
+                <span class="material-symbols-outlined">timeline</span>
+              </button>
+            </div>
+          </header>
+
+          <div class="detail-tabs">
+            <button class="detail-tab active" type="button" data-detail-tab="info">
+              <span class="material-symbols-outlined">description</span>
+              Thông tin
+            </button>
+            <button class="detail-tab" type="button" data-detail-tab="discussion">
+              <span class="material-symbols-outlined">chat_bubble</span>
+              Trao đổi
+            </button>
+            <button class="detail-tab" type="button" data-detail-tab="history">
+              <span class="material-symbols-outlined">history</span>
+              Lịch sử
+            </button>
+          </div>
+
+          <div class="workflow-steps">
+          <div class="workflow-step completed" role="button" tabindex="0" data-step="draft">
+            <span>1</span>
+            <strong>Tạo mới</strong>
+            <div class="workflow-step-tooltip">
+              <div>12/07/2026 16:18</div>
+              <div>Hoàn thành</div>
+            </div>
+          </div>
+          <div class="workflow-step completed" role="button" tabindex="0" data-step="approve">
+            <span>2</span>
+            <strong>Phê duyệt</strong>
+            <div class="workflow-step-tooltip">
+              <div>12/07/2026 16:20</div>
+              <div>Hoàn thành</div>
+            </div>
+          </div>
+          <div class="workflow-step current" role="button" tabindex="0" data-step="feedback">
+            <span>3</span>
+            <strong>Góp ý</strong>
+            <div class="workflow-step-tooltip">
+              <div>12/07/2026 16:24</div>
+              <div>Đang xử lý</div>
+            </div>
+          </div>
+          <div class="workflow-step cancel" role="button" tabindex="0" data-step="sign">
+            <span>4</span>
+            <strong>Trình ký</strong>
+            <div class="workflow-step-tooltip">
+              <div>—</div>
+              <div>Chưa thực hiện</div>
+            </div>
+          </div>
+          <div class="workflow-step pending" role="button" tabindex="0" data-step="complete">
+            <span>5</span>
+            <strong>Hoàn thành</strong>
+            <div class="workflow-step-tooltip">
+              <div>—</div>
+              <div>Chưa thực hiện</div>
+            </div>
+          </div>
+          </div>
+        </section>
+
+        <div class="draft-detail-scroll">
+          <section class="detail-card">
+            <div class="detail-card-title">Thông tin chung</div>
+            <div class="readonly-grid">
+              <div class="readonly-label">Tiêu đề</div>
+              <div id="readonlyTitle" class="readonly-value">67868</div>
+              <div class="readonly-label">Hạn xử lý</div>
+              <div id="readonlyDueDate" class="readonly-value">--</div>
+              <div class="readonly-label">Ghi chú</div>
+              <div id="readonlyNote" class="readonly-value">--</div>
+            </div>
+          </section>
+
+          <section class="detail-card">
+            <div class="detail-card-title">Văn bản</div>
+
+            <div class="section-body detail-section-body">
+              <div class="detail-document-group">
+                <div>
+                  <div class="upload-label">Văn bản dự thảo hoàn thiện</div>
+                  <div
+                    id="detailCompletedDraftFiles"
+                    class="file-list workflow-detail-file-list"
+                  ></div>
+                </div>
+
+                <div>
+                  <div class="upload-label">Văn bản dự thảo</div>
+                  <div id="detailDraftFiles" class="file-list workflow-detail-file-list"></div>
+                </div>
+
+                <div>
+                  <div class="upload-label">Văn bản đính kèm</div>
+                  <div id="detailAttachmentFiles" class="file-list workflow-detail-file-list"></div>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <section class="detail-card">
+            <div class="detail-card-title">Người góp ý & CC</div>
+
+            <div class="section-body detail-section-body">
+              <div class="people-grid">
+                <div class="people-card">
+                  <div class="people-header">
+                    <div class="people-title">
+                      Người góp ý
+                      <span id="detailCommenterCount" class="people-count">
+                        3 người
+                      </span>
+                    </div>
+                  </div>
+
+                  <div id="detailCommenterList"></div>
+                </div>
+
+                <div class="people-card">
+                  <div class="people-header">
+                    <div class="people-title">
+                      Người CC
+                      <span id="detailCcCount" class="people-count">
+                        2 người
+                      </span>
+                    </div>
+                  </div>
+
+                  <div id="detailCcList"></div>
+                </div>
+              </div>
+            </div>
+          </section>
+        </div>
+
+        <footer id="draftDetailActions" class="draft-detail-actions">
+          <button class="genco-button list-secondary-button detail-start-action" type="button">
+            <span class="material-symbols-outlined">edit</span>
+            Chỉnh sửa
+          </button>
+          <button class="genco-button list-secondary-button detail-start-action" type="button">
+            <span class="material-symbols-outlined">send</span>
+            Gửi phê duyệt
+          </button>
+          <button
+            id="sendFeedbackButton"
+            class="genco-button genco-button--primary detail-start-action"
+            type="button"
+          >
+            <span class="material-symbols-outlined">arrow_forward</span>
+            Gửi góp ý
+          </button>
+
+          <div class="feedback-stop">
+            <button
+              id="stopFeedbackButton"
+              class="genco-button genco-button--primary detail-stop-action"
+              type="button"
+              aria-expanded="false"
+              aria-haspopup="true"
+            >
+              <span class="material-symbols-outlined">bolt</span>
+              Thực hiện
+              <span class="material-symbols-outlined">expand_less</span>
+            </button>
+
+            <div id="stopFeedbackMenu" class="feedback-action-menu" role="menu">
+              <button class="feedback-action-item" type="button" role="menuitem">
+                <span class="material-symbols-outlined">play_circle</span>
+                Mở góp ý
+              </button>
+              <button class="feedback-action-item" type="button" role="menuitem">
+                <span class="material-symbols-outlined">forum</span>
+                Xin ý kiến
+              </button>
+              <button
+                class="feedback-action-item"
+                type="button"
+                role="menuitem"
+                data-action="sign-create"
+              >
+                <span class="material-symbols-outlined">drive_file_move</span>
+                Trình ký
+              </button>
+              <button class="feedback-action-item" type="button" role="menuitem">
+                <span class="material-symbols-outlined">task_alt</span>
+                Hoàn thành
+              </button>
+              <button class="feedback-action-item" type="button" role="menuitem">
+                <span class="material-symbols-outlined">note_add</span>
+                Dự thảo bổ sung
+              </button>
+            </div>
+          </div>
+
+          <div class="detail-more">
+            <button
+              id="detailMoreButton"
+              class="genco-button detail-more-button"
+              type="button"
+              aria-label="Thêm thao tác"
+              aria-expanded="false"
+              aria-haspopup="true"
+            >
+              <span class="material-symbols-outlined">more_vert</span>
+            </button>
+
+            <div id="detailActionMenu" class="detail-action-menu" role="menu">
+              <button class="detail-menu-item danger" type="button" role="menuitem">
+                <span class="material-symbols-outlined">delete</span>
+                Huỷ
+              </button>
+            </div>
+          </div>
+        </footer>
+      </main>
+    </div>
+  </div>
+
+  <div id="signCreateView" class="sign-create-view screen-hidden">
+    <aside class="workflow-menu sign-create-left-menu">
+      <div class="workflow-brand">
+        <div class="brand-orbit">✦</div>
+        <div>
+          <div class="workflow-brand-title">Genco3 Workflow</div>
+          <div class="workflow-brand-subtitle">Toàn bộ quy trình</div>
+        </div>
+        <span class="material-symbols-outlined brand-collapse">chevron_left</span>
+      </div>
+
+      <nav class="workflow-nav">
+        <a class="workflow-nav-item" href="#">
+          <span class="material-symbols-outlined">pending_actions</span>
+          Cần xử lý
+          <span class="nav-badge blue">31</span>
+        </a>
+
+        <div class="workflow-nav-label">Quản lý hồ sơ</div>
+
+        <a class="workflow-nav-item" href="#">
+          <span class="material-symbols-outlined">person</span>
+          Hồ sơ của tôi
+        </a>
+
+        <button class="workflow-nav-item active" type="button">
+          <span class="material-symbols-outlined">add</span>
+          Tạo quy trình
+        </button>
+
+        <button class="workflow-nav-item" type="button" data-go-list>
+          <span class="material-symbols-outlined">folder_open</span>
+          Tất cả hồ sơ
+        </button>
+
+        <a class="workflow-nav-item" href="#">
+          <span class="material-symbols-outlined">category</span>
+          Danh mục quy trình
+        </a>
+
+        <a class="workflow-nav-item" href="#">
+          <span class="material-symbols-outlined">inventory_2</span>
+          Đã xử lý
+          <span class="nav-badge orange">6</span>
+        </a>
+
+        <a class="workflow-nav-item" href="#">
+          <span class="material-symbols-outlined">task_alt</span>
+          Hoàn thành
+        </a>
+
+        <a class="workflow-nav-item" href="#">
+          <span class="material-symbols-outlined">draft</span>
+          Bản nháp
+        </a>
+
+        <a class="workflow-nav-item" href="#">
+          <span class="material-symbols-outlined">do_not_disturb_on</span>
+          Đã hủy / Từ chối
+        </a>
+      </nav>
+
+      <div class="workflow-menu-footer">
+        <a class="workflow-nav-item" href="#">
+          <span class="material-symbols-outlined">notifications</span>
+          Thông báo
+          <span class="nav-badge red">247</span>
+        </a>
+
+        <div class="workflow-account">
+          <span class="workflow-avatar"></span>
+          <div>
+            <div class="workflow-account-name">GENCO 3</div>
+            <div class="workflow-account-mail">genco3workflow@genco3...</div>
+          </div>
+          <span class="material-symbols-outlined">more_vert</span>
+        </div>
+      </div>
+    </aside>
+
+    <div class="sign-create-content">
+      <header class="sign-create-header">
+        <button id="signBackButton" class="back-button" type="button">
+          ←
+        </button>
+
+        <div>
+          <div class="eyebrow">Quy trình dự thảo</div>
+          <h1 id="signCreatePageTitle" class="page-title">Tạo mới: Trình ký văn bản</h1>
+        </div>
+      </header>
+
+    <main class="sign-create-page">
+      <form id="signCreateForm" novalidate>
+        <section class="section">
+          <div class="section-header">
+            <h2 class="section-title">Thông tin chung</h2>
+          </div>
+
+          <div class="section-body">
+            <div class="sign-form-grid">
+              <div class="field">
+                <div class="label-row">
+                  <label for="documentGroup">
+                    Nhóm văn bản <span class="required">*</span>
+                  </label>
+                </div>
+                <select id="documentGroup">
+                  <option>Văn bản quản trị nội bộ</option>
+                  <option>Văn bản điều hành</option>
+                  <option>Văn bản báo cáo</option>
+                </select>
+              </div>
+
+              <div class="field">
+                <div class="label-row">
+                  <label for="documentCategory">
+                    Phân loại VB <span class="required">*</span>
+                  </label>
+                </div>
+                <select id="documentCategory">
+                  <option>Quy trình</option>
+                  <option>Quy định</option>
+                  <option>Tờ trình</option>
+                </select>
+              </div>
+
+              <div class="field">
+                <div class="label-row">
+                  <label for="leadDepartment">
+                    Ban chủ trì <span class="required">*</span>
+                  </label>
+                </div>
+                <input id="leadDepartment" value="Ban Pháp chế" readonly />
+              </div>
+
+              <div class="field">
+                <div class="label-row">
+                  <label for="documentType">
+                    Loại văn bản <span class="required">*</span>
+                  </label>
+                </div>
+                <select id="documentType">
+                  <option>Tờ trình</option>
+                  <option>Quyết định</option>
+                  <option>Thông báo</option>
+                  <option>Công văn</option>
+                </select>
+              </div>
+
+              <div class="field full">
+                <div class="label-row">
+                  <label for="summary">
+                    Trích yếu <span class="required">*</span>
+                  </label>
+                  <span id="summaryCounter" class="counter">0/200</span>
+                </div>
+                <textarea
+                  id="summary"
+                  maxlength="200"
+                  placeholder="Nhập trích yếu văn bản trình ký"
+                >Trình ký văn bản dự thảo quy trình góp ý của các Ban, VP</textarea>
+              </div>
+
+              <div class="field">
+                <div class="label-row">
+                  <label for="language">
+                    Ngôn ngữ <span class="required">*</span>
+                  </label>
+                </div>
+                <select id="language">
+                  <option>Tiếng Việt</option>
+                  <option>Tiếng Anh</option>
+                </select>
+              </div>
+
+              <div class="field">
+                <div class="label-row">
+                  <label for="signNumber">
+                    Số ký hiệu <span class="required">*</span>
+                  </label>
+                </div>
+                <input id="signNumber" placeholder="Nhập số ký hiệu" />
+              </div>
+
+              <div class="field">
+                <div class="label-row">
+                  <label for="identifierRegion">
+                    Vùng nhận dạng Số hiệu Văn bản
+                    <span class="required">*</span>
+                  </label>
+                </div>
+                <input id="identifierRegion" placeholder="Nhập vùng nhận dạng" />
+              </div>
+
+              <div class="field sign-field-pair">
+                <div>
+                  <div class="label-row">
+                    <label for="securityLevel">
+                      Độ mật <span class="required">*</span>
+                    </label>
+                  </div>
+                  <select id="securityLevel">
+                    <option>Thường</option>
+                    <option>Mật</option>
+                    <option>Tối mật</option>
+                  </select>
+                </div>
+
+                <div>
+                  <div class="label-row">
+                    <label for="urgencyLevel">
+                      Độ khẩn <span class="required">*</span>
+                    </label>
+                  </div>
+                  <select id="urgencyLevel">
+                    <option>Thường</option>
+                    <option>Khẩn</option>
+                    <option>Hỏa tốc</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="field">
+                <div class="label-row">
+                  <label for="relatedDocument">Văn bản liên quan</label>
+                </div>
+                <div
+                  class="disabled-select-wrap"
+                  data-tooltip="Tính năng đang được phát triển"
+                >
+                  <select id="relatedDocument" disabled>
+                    <option>Chọn văn bản liên quan</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="field">
+                <div class="label-row">
+                  <label for="archiveStorage">Chuyển vào hồ sơ lưu trữ</label>
+                </div>
+                <div
+                  class="disabled-select-wrap"
+                  data-tooltip="Tính năng đang được phát triển"
+                >
+                  <select id="archiveStorage" disabled>
+                    <option>Chọn hồ sơ lưu trữ</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="section">
+          <div class="section-header">
+            <h2 class="section-title">
+              Lãnh đạo phê duyệt <span class="required">*</span>
+            </h2>
+            <button
+              class="genco-button genco-button--secondary genco-button--small people-add-button leader-add-button"
+              type="button"
+            >
+              <span class="genco-button__icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" focusable="false">
+                  <path
+                    fill="currentColor"
+                    d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2Z"
+                  ></path>
+                </svg>
+              </span>
+              Thêm lãnh đạo
+            </button>
+          </div>
+
+          <div class="section-body">
+            <div class="signer-panel">
+              <div class="signer-list">
+                <div class="signer-row">
+                  <div class="signer-index">1</div>
+
+                  <select class="signer-select" aria-label="Người ký 1">
+                    <option>TGĐ. Lê Văn Danh</option>
+                    <option>Bí thư Đảng Ủy. Đinh Quốc Lâm</option>
+                  </select>
+
+                  <label class="seal-check">
+                    <input type="checkbox" checked />
+                    <span>Có dấu</span>
+                  </label>
+
+                  <input class="signer-code" value="[111111]" />
+
+                  <button class="signer-remove" type="button" aria-label="Xóa">
+                    <span class="material-symbols-outlined">delete</span>
+                  </button>
+                </div>
+
+                <div class="signer-row">
+                  <div class="signer-index">2</div>
+
+                  <select class="signer-select" aria-label="Người ký 2">
+                    <option>Bí thư Đảng Ủy. Đinh Quốc Lâm</option>
+                    <option>TGĐ. Lê Văn Danh</option>
+                  </select>
+
+                  <label class="seal-check">
+                    <input type="checkbox" checked />
+                    <span>Có dấu</span>
+                  </label>
+
+                  <input class="signer-code" value="[222222]" />
+
+                  <button class="signer-remove" type="button" aria-label="Xóa">
+                    <span class="material-symbols-outlined">delete</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="section">
+          <div class="section-header">
+            <h2 class="section-title">Văn bản đính kèm</h2>
+            <span id="signFileCount" class="section-count-badge">
+              <span class="material-symbols-outlined">description</span>
+              5 file
+            </span>
+          </div>
+
+          <div class="section-body">
+            <label
+              id="signMainDropzone"
+              class="dropzone"
+              for="signMainInput"
+            >
+              <div class="dropzone-icon">⇧</div>
+
+              <div>
+                <div class="dropzone-title">
+                  Kéo thả Văn bản đính kèm hoặc <span>chọn file</span>
+                </div>
+
+                <div class="dropzone-note">
+                  Word, Excel, PowerPoint, PDF · Tối đa 50 file
+                </div>
+              </div>
+
+              <div class="dropzone-action">Chọn file</div>
+            </label>
+
+            <input
+              id="signMainInput"
+              class="file-input"
+              type="file"
+              accept=".doc,.docx,.xls,.xlsx,.ppt,.pptx,.pdf"
+              multiple
+            />
+
+            <div id="signMainList" class="file-list sign-file-list"></div>
+          </div>
+        </section>
+
+        <section class="section">
+          <div class="section-header">
+            <h2 class="section-title">Các Ban & Lãnh đạo liên quan</h2>
+          </div>
+
+          <div class="section-body">
+            <div class="people-grid related-grid">
+              <div class="related-card">
+                <div class="related-header">
+                  <div class="people-title">Các Ban liên quan</div>
+                  <span class="selected-badge">1 đã chọn</span>
+                </div>
+
+                <div class="related-search">
+                  <span class="material-symbols-outlined">search</span>
+                  <input placeholder="Tìm kiếm Ban" />
+                  <button
+                    class="related-search-clear"
+                    type="button"
+                    aria-label="Xóa từ khóa tìm kiếm"
+                    hidden
+                  >
+                    <span class="material-symbols-outlined">close</span>
+                  </button>
+                </div>
+
+                <div class="related-list">
+                  <label class="related-option">
+                    <input type="checkbox" checked />
+                    <span>Ban Pháp chế</span>
+                  </label>
+                  <label class="related-option">
+                    <input type="checkbox" />
+                    <span>Ban Tài chính Kế toán</span>
+                  </label>
+                  <label class="related-option">
+                    <input type="checkbox" />
+                    <span>Ban Nhân sự</span>
+                  </label>
+                  <label class="related-option">
+                    <input type="checkbox" />
+                    <span>Văn phòng Công ty</span>
+                  </label>
+                  <label class="related-option">
+                    <input type="checkbox" />
+                    <span>Ban Kỹ thuật</span>
+                  </label>
+                </div>
+              </div>
+
+              <div class="related-card">
+                <div class="related-header">
+                  <div class="people-title">Lãnh đạo liên quan</div>
+                  <span class="selected-badge">1 đã chọn</span>
+                </div>
+
+                <div class="related-search">
+                  <span class="material-symbols-outlined">search</span>
+                  <input placeholder="Tìm kiếm lãnh đạo" />
+                  <button
+                    class="related-search-clear"
+                    type="button"
+                    aria-label="Xóa từ khóa tìm kiếm"
+                    hidden
+                  >
+                    <span class="material-symbols-outlined">close</span>
+                  </button>
+                </div>
+
+                <div class="related-list">
+                  <label class="related-option">
+                    <input type="checkbox" checked />
+                    <span>
+                      Nguyễn Minh Anh
+                      <small>Ban Pháp chế</small>
+                    </span>
+                  </label>
+                  <label class="related-option">
+                    <input type="checkbox" />
+                    <span>
+                      Trần Quốc Huy
+                      <small>Ban Pháp chế</small>
+                    </span>
+                  </label>
+                  <label class="related-option">
+                    <input type="checkbox" />
+                    <span>
+                      Lê Thu Hương
+                      <small>Văn phòng Công ty</small>
+                    </span>
+                  </label>
+                  <label class="related-option">
+                    <input type="checkbox" />
+                    <span>
+                      Vũ Hải Nam
+                      <small>Ban Tài chính Kế toán</small>
+                    </span>
+                  </label>
+                  <label class="related-option">
+                    <input type="checkbox" />
+                    <span>
+                      Nguyễn Hoàng Mai
+                      <small>Ban Nhân sự</small>
+                    </span>
+                  </label>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+      </form>
+    </main>
+
+    <footer class="sign-action-bar">
+      <button
+        id="signCancelButton"
+        class="genco-button genco-button--secondary"
+        type="button"
+      >
+        <span class="material-symbols-outlined">close</span>
+        Huỷ
+      </button>
+
+      <button
+        id="signSubmitButton"
+        class="genco-button genco-button--primary"
+        type="button"
+      >
+        <span id="signSubmitIcon" class="material-symbols-outlined">drive_file_move</span>
+        <span id="signSubmitLabel">Tạo trình ký</span>
+      </button>
+    </footer>
+    </div>
+  </div>
+
+  <div id="signDetailView" class="workflow-shell screen-hidden">
+    <header class="workflow-topbar">
+      <div class="topbar-left">
+        <span class="material-symbols-outlined">apps</span>
+        <span class="topbar-product">Power Apps</span>
+        <span class="topbar-divider"></span>
+        <span class="topbar-title">WF-Trung Tâm Quản Lý Quy Trình Số</span>
+        <span class="material-symbols-outlined topbar-info">info</span>
+      </div>
+
+      <div class="topbar-actions">
+        <button class="topbar-share" type="button">
+          <span class="material-symbols-outlined">ios_share</span>
+          Share
+          <span class="material-symbols-outlined">expand_more</span>
+        </button>
+        <span class="material-symbols-outlined">fullscreen</span>
+        <span class="material-symbols-outlined">download</span>
+        <span class="material-symbols-outlined">settings</span>
+        <span class="material-symbols-outlined">help</span>
+        <span class="workflow-avatar"></span>
+      </div>
+    </header>
+
+    <div class="sign-detail-layout">
+      <aside class="workflow-menu">
+        <div class="workflow-brand">
+          <div class="brand-orbit">✦</div>
+          <div>
+            <div class="workflow-brand-title">Genco3 Workflow</div>
+            <div class="workflow-brand-subtitle">Toàn bộ quy trình</div>
+          </div>
+          <span class="material-symbols-outlined brand-collapse">chevron_left</span>
+        </div>
+
+        <nav class="workflow-nav">
+          <a class="workflow-nav-item" href="#">
+            <span class="material-symbols-outlined">pending_actions</span>
+            Cần xử lý
+            <span class="nav-badge blue">31</span>
+          </a>
+          <div class="workflow-nav-label">Quản lý hồ sơ</div>
+          <button class="workflow-nav-item" type="button" data-go-list>
+            <span class="material-symbols-outlined">folder_open</span>
+            Tất cả hồ sơ
+          </button>
+          <a class="workflow-nav-item active" href="#">
+            <span class="material-symbols-outlined">drive_file_move</span>
+            Trình ký
+          </a>
+          <a class="workflow-nav-item" href="#">
+            <span class="material-symbols-outlined">task_alt</span>
+            Hoàn thành
+          </a>
+        </nav>
+      </aside>
+
+      <main class="draft-detail-panel sign-detail-panel">
+        <section class="workflow-overview" data-workflow-overview>
+          <header class="draft-detail-header workflow-overview-header">
+            <div class="draft-title-block">
+              <div class="draft-title-row workflow-title-surface">
+                <h1 id="signDetailDraftTitle" class="workflow-overview-title">
+                  67868
+                </h1>
+
+                <div class="workflow-title-actions">
+                  <button
+                    class="workflow-inline-action"
+                    type="button"
+                    title="Copy tiêu đề"
+                    aria-label="Copy tiêu đề"
+                    data-copy-target="signDetailDraftTitle"
+                  >
+                    <span class="material-symbols-outlined">content_copy</span>
+                  </button>
+                  <button
+                    class="workflow-inline-action"
+                    type="button"
+                    title="Chia sẻ tiêu đề"
+                    aria-label="Chia sẻ tiêu đề"
+                    data-share-target="signDetailDraftTitle"
+                  >
+                    <span class="material-symbols-outlined">share</span>
+                  </button>
+                </div>
+              </div>
+
+              <div class="draft-detail-meta workflow-overview-meta">
+                <span class="detail-meta-item workflow-code-item">
+                  <span id="signDetailDraftCode" class="workflow-code-value">
+                    QT-DU-THAO-2607-055
+                  </span>
+                  <button
+                    class="workflow-inline-action workflow-code-copy"
+                    type="button"
+                    title="Copy mã dự thảo"
+                    aria-label="Copy mã dự thảo"
+                    data-copy-target="signDetailDraftCode"
+                  >
+                    <span class="material-symbols-outlined">content_copy</span>
+                  </button>
+                </span>
+                <span class="workflow-meta-separator">|</span>
+                <span class="detail-meta-item workflow-creator-item">
+                  <span class="workflow-meta-label">Người tạo :</span>
+                  <span class="creator-profile">
+                    <strong id="signDetailCreatorName" class="creator-link">
+                      Nguyễn Minh Anh
+                    </strong>
+                    <span class="creator-tooltip">
+                      <span id="signDetailCreatorPosition">Chuyên viên chính</span>
+                      <span id="signDetailCreatorDepartment">Ban Pháp chế</span>
+                      <span id="signDetailCreatorEmail">nguyen.minh.anh@genco3.vn</span>
+                    </span>
+                  </span>
+                </span>
+                <span class="workflow-meta-separator">|</span>
+                <span id="signDetailCreatedAt" class="workflow-created-at">
+                  12/07/2026 16:18
+                </span>
+              </div>
+            </div>
+
+            <div class="workflow-overview-actions">
+              <button
+                class="detail-expand-button"
+                type="button"
+                title="Mở rộng chi tiết"
+                aria-label="Mở rộng chi tiết"
+                data-expand-detail
+              >
+                <span class="material-symbols-outlined">open_in_full</span>
+              </button>
+              <button
+                class="detail-expand-button"
+                type="button"
+                title="Ẩn / hiện tiến trình"
+                aria-label="Ẩn / hiện tiến trình"
+                data-toggle-progress
+              >
+                <span class="material-symbols-outlined">timeline</span>
+              </button>
+            </div>
+          </header>
+
+          <div class="detail-tabs">
+            <button class="detail-tab active" type="button" data-detail-tab="info">
+              <span class="material-symbols-outlined">description</span>
+              Thông tin
+            </button>
+            <button class="detail-tab" type="button" data-detail-tab="discussion">
+              <span class="material-symbols-outlined">chat_bubble</span>
+              Trao đổi
+            </button>
+            <button class="detail-tab" type="button" data-detail-tab="history">
+              <span class="material-symbols-outlined">history</span>
+              Lịch sử
+            </button>
+          </div>
+
+          <div class="workflow-steps">
+          <div class="workflow-step completed" role="button" tabindex="0" data-step="draft">
+            <span>1</span>
+            <strong>Tạo mới</strong>
+          </div>
+          <div class="workflow-step completed">
+            <span>2</span>
+            <strong>Phê duyệt</strong>
+          </div>
+          <div class="workflow-step completed">
+            <span>3</span>
+            <strong>Góp ý</strong>
+          </div>
+          <div class="workflow-step current" role="button" tabindex="0" data-step="sign">
+            <span>4</span>
+            <strong>Trình ký</strong>
+          </div>
+          <div class="workflow-step pending" role="button" tabindex="0" data-step="complete">
+            <span>5</span>
+            <strong>Hoàn thành</strong>
+          </div>
+          </div>
+        </section>
+
+        <div class="draft-detail-scroll sign-detail-scroll">
+          <section class="signing-list-card">
+            <div class="signing-list-header">
+              <h2 id="signingListTitle">Có 6 văn bản trình ký</h2>
+              <div class="signing-list-actions">
+                <button
+                  id="signingViewAllButton"
+                  class="signing-text-button"
+                  type="button"
+                >
+                  Xem tất cả
+                </button>
+              </div>
+            </div>
+
+            <div class="signing-slider">
+              <button
+                id="signingSlidePrev"
+                class="signing-slider-button"
+                type="button"
+                aria-label="Cuộn danh sách trình ký sang trái"
+              >
+                <span class="material-symbols-outlined">chevron_left</span>
+              </button>
+
+            <div id="signingCardRow" class="signing-card-row">
+              <button class="signing-card active" type="button" data-status="draft">
+                <strong>TK-2026-0048</strong>
+                <span>Trình ký văn bản dự thảo quy trình góp ý</span>
+                <small>13/07/2026</small>
+                <em class="draft">Bản nháp</em>
+              </button>
+              <button class="signing-card" type="button" data-status="waiting">
+                <strong>TK-2026-0042</strong>
+                <span>Trình ký xin ý kiến Ban Tài chính - Kế toán</span>
+                <small>04/07/2026</small>
+                <em class="blue">Chờ ký</em>
+              </button>
+              <button class="signing-card" type="button" data-status="signing">
+                <strong>TK-2026-0039</strong>
+                <span>Trình ký phê duyệt danh sách khen thưởng</span>
+                <small>28/06/2026</small>
+                <em class="violet">Đang ký</em>
+              </button>
+              <button class="signing-card" type="button" data-status="rejected">
+                <strong>TK-2026-0031</strong>
+                <span>Trình ký bản dự thảo lần 1</span>
+                <small>18/06/2026</small>
+                <em class="red">Từ chối</em>
+              </button>
+              <button class="signing-card" type="button" data-status="recalled">
+                <strong>TK-2026-0027</strong>
+                <span>Trình ký dự thảo bổ sung sau góp ý</span>
+                <small>12/06/2026</small>
+                <em class="gray">Thu hồi</em>
+              </button>
+              <button class="signing-card" type="button" data-status="signed">
+                <strong>TK-2026-0024</strong>
+                <span>Trình ký quyết định ban hành quy trình góp ý dự thảo</span>
+                <small>05/06/2026</small>
+                <em class="green">Đã ký</em>
+              </button>
+            </div>
+
+              <button
+                id="signingSlideNext"
+                class="signing-slider-button"
+                type="button"
+                aria-label="Cuộn danh sách trình ký sang phải"
+              >
+                <span class="material-symbols-outlined">chevron_right</span>
+              </button>
+            </div>
+          </section>
+
+          <section class="detail-card sign-detail-combined-card">
+            <div class="sign-summary-card">
+              <h2 id="signSummaryText">
+                Trình ký văn bản dự thảo quy trình góp ý
+              </h2>
+              <div class="sign-summary-actions">
+                <button class="icon-button" type="button" title="Copy">
+                  <span class="material-symbols-outlined">content_copy</span>
+                </button>
+                <button class="icon-button" type="button" title="Chia sẻ">
+                  <span class="material-symbols-outlined">share</span>
+                </button>
+              </div>
+            </div>
+
+            <div class="sign-section-block">
+              <div class="detail-card-title">Thông tin chung</div>
+              <div class="sign-info-grid">
+                <div><span>Mã trình ký</span><strong id="signDetailCodeValue">TK-2026-0048</strong></div>
+                <div><span>Trạng thái</span><strong><span id="signDetailStatus" class="sign-status-pill draft">Bản nháp</span></strong></div>
+                <div><span>Số ký hiệu</span><strong>--/Genco3-KD-TTĐ</strong></div>
+                <div><span>Phân loại</span><strong>Văn bản Tổng công ty</strong></div>
+                <div><span>Nhóm văn bản</span><strong>Văn bản đi ký số</strong></div>
+                <div><span>Loại văn bản</span><strong>Tờ trình</strong></div>
+                <div><span>Ngôn ngữ</span><strong>Tiếng Việt</strong></div>
+                <div><span>Độ mật</span><strong>Bình thường</strong></div>
+                <div><span>Độ khẩn</span><strong class="urgent-text">Thường khẩn</strong></div>
+                <div><span>Ban chủ trì</span><strong>Ban Pháp chế</strong></div>
+                <div><span>Người tạo</span><strong>Nguyễn Minh Anh</strong></div>
+                <div><span>Ngày lưu</span><strong>13/07/2026 10:30</strong></div>
+              </div>
+            </div>
+
+            <div class="sign-section-block">
+              <div class="detail-card-title">
+                Có <span id="signDetailAttachmentCount">5</span> văn bản đính kèm
+              </div>
+              <div id="signDetailFiles" class="sign-detail-file-list"></div>
+            </div>
+
+            <div class="sign-section-block">
+              <div class="sign-tabs">
+                <button class="active" type="button">Danh sách ký</button>
+                <button type="button">Lịch sử xử lý</button>
+                <button type="button">Ghi chú</button>
+              </div>
+              <div id="signApprovalTable" class="sign-approval-table"></div>
+            </div>
+          </section>
+        </div>
+
+        <footer id="signDetailActions" class="draft-detail-actions sign-detail-actions">
+        </footer>
+      </main>
+    </div>
+  </div>
+
+  <div id="peopleModal" class="modal-backdrop">
+    <div class="modal">
+      <div class="modal-header">
+        <div>
+          <h2 id="peopleModalTitle" class="modal-title">Chọn người</h2>
+
+          <p class="modal-description">
+            Chọn người đang hoạt động từ Orgchart.
+          </p>
+        </div>
+
+        <button id="closePeopleModal" class="icon-button" type="button">
+          ✕
+        </button>
+      </div>
+
+      <div class="modal-body">
+        <div id="peopleModalError" class="modal-error"></div>
+
+        <div class="search-box">
+          <input
+            id="peopleSearch"
+            placeholder="Tìm theo họ tên, phòng ban hoặc chức vụ"
+          />
+        </div>
+
+        <div id="orgList" class="org-list"></div>
+      </div>
+
+      <div class="modal-footer">
+        <button
+          id="cancelPeople"
+          class="genco-button genco-button--secondary"
+          type="button"
+        >
+          Hủy
+        </button>
+
+        <button
+          id="confirmPeople"
+          class="genco-button genco-button--primary"
+          type="button"
+        >
+          Xác nhận chọn
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div id="detailModal" class="modal-backdrop">
+    <div class="modal detail-modal">
+      <div class="modal-header">
+        <h2 class="modal-title">Thông tin góp ý</h2>
+
+        <button id="closeDetailModal" class="icon-button" type="button">
+          ✕
+        </button>
+      </div>
+
+      <div id="detailModalBody" class="modal-body"></div>
+
+      <div class="modal-footer">
+        <button
+          id="detailCloseButton"
+          class="genco-button genco-button--secondary"
+          type="button"
+        >
+          Đóng
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div id="completedDraftModal" class="modal-backdrop">
+    <div class="modal completed-draft-modal">
+      <div class="modal-header">
+        <div>
+          <h2 class="modal-title">Upload văn bản dự thảo hoàn thiện</h2>
+          <p class="modal-description">
+            Tải lên văn bản dự thảo hoàn thiện trước khi tạo trình ký.
+          </p>
+        </div>
+
+        <button id="closeCompletedDraftModal" class="icon-button" type="button">
+          ✕
+        </button>
+      </div>
+
+      <div class="modal-body">
+        <label
+          id="completedDraftDropzone"
+          class="dropzone"
+          for="completedDraftInput"
+        >
+          <div class="dropzone-icon">⇧</div>
+
+          <div>
+            <div class="dropzone-title">
+              Kéo thả Văn bản dự thảo hoàn thiện hoặc <span>chọn file</span>
+            </div>
+
+            <div class="dropzone-note">
+              Chỉ hỗ trợ .docx · Tối đa 10 file · Tối đa 50MB/file
+            </div>
+          </div>
+
+          <div class="dropzone-action">Chọn file</div>
+        </label>
+
+        <input
+          id="completedDraftInput"
+          class="file-input"
+          type="file"
+          accept=".docx"
+          multiple
+        />
+
+        <div id="completedDraftUploadList" class="file-list"></div>
+        <div id="completedDraftUploadError" class="error"></div>
+      </div>
+
+      <div class="modal-footer">
+        <button
+          id="cancelCompletedDraftUpload"
+          class="genco-button genco-button--secondary"
+          type="button"
+        >
+          Huỷ
+        </button>
+
+        <button
+          id="confirmCompletedDraftUpload"
+          class="genco-button genco-button--primary"
+          type="button"
+        >
+          Xác nhận
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div id="confirmModal" class="modal-backdrop">
+    <div class="modal small">
+      <div class="modal-header">
+        <div>
+          <h2 id="confirmModalTitle" class="modal-title">Xác nhận</h2>
+        </div>
+
+        <button id="closeConfirmModal" class="icon-button" type="button">
+          ✕
+        </button>
+      </div>
+
+      <div class="modal-body">
+        <p id="confirmModalMessage" class="confirm-message"></p>
+      </div>
+
+      <div class="modal-footer">
+        <button
+          id="confirmModalSecondary"
+          class="genco-button genco-button--secondary"
+          type="button"
+        >
+          Hủy
+        </button>
+
+        <button
+          id="confirmModalPrimary"
+          class="genco-button genco-button--primary"
+          type="button"
+        >
+          Xác nhận
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div id="signContentModal" class="modal-backdrop">
+    <div class="modal small">
+      <div class="modal-header">
+        <h2 class="modal-title">Nội dung ký</h2>
+        <button
+          id="closeSignContentModal"
+          class="icon-button"
+          type="button"
+          aria-label="Đóng nội dung ký"
+        >
+          <span class="material-symbols-outlined">close</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <p id="signContentModalText" class="sign-content-modal-text"></p>
+      </div>
+      <div class="modal-footer">
+        <button
+          id="dismissSignContentModal"
+          class="genco-button genco-button--secondary"
+          type="button"
+        >
+          Đóng
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div id="toastArea" class="toast-area"></div>
+  <script src="assets/js/mock-data.js"></script>
+  <script src="assets/js/app.js"></script>
+</body>
+</html>
