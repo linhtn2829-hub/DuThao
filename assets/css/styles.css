@@ -2773,6 +2773,161 @@ select:focus {
   grid-template-columns: 34px 42px minmax(0, 1fr) 36px;
 }
 
+.signing-inbox-layout {
+  height: calc(100vh - 48px);
+  display: grid;
+  grid-template-columns: 270px minmax(0, 1fr);
+  overflow: hidden;
+}
+
+.signing-inbox-panel {
+  overflow: auto;
+  padding: 28px;
+  background: #f4f7fb;
+}
+
+.signing-inbox-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 24px;
+  margin-bottom: 22px;
+}
+
+.signing-inbox-eyebrow {
+  color: #2563eb;
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.signing-inbox-header h1 {
+  margin: 6px 0 4px;
+  color: #1e293b;
+  font-size: 24px;
+  line-height: 1.3;
+}
+
+.signing-inbox-header p {
+  margin: 0;
+  color: #64748b;
+  font-size: 13px;
+}
+
+.signing-inbox-total {
+  flex: 0 0 auto;
+  padding: 7px 11px;
+  border-radius: 999px;
+  color: #2563eb;
+  background: #dbeafe;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.signing-inbox-filters {
+  margin-bottom: 12px;
+}
+
+.signing-inbox-table {
+  overflow: auto;
+  border: 1px solid #dbe4f0;
+  border-radius: 8px;
+  background: #fff;
+}
+
+.signing-inbox-table-head,
+.signing-inbox-row {
+  min-width: 980px;
+  display: grid;
+  grid-template-columns: 130px minmax(300px, 1fr) 150px 130px 100px 28px;
+  gap: 18px;
+  align-items: center;
+}
+
+.signing-inbox-table-head {
+  min-height: 42px;
+  padding: 0 18px;
+  border-bottom: 1px solid #e7edf5;
+  color: #94a3b8;
+  background: #f8fafc;
+  font-size: 11.5px;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.signing-inbox-row {
+  width: 100%;
+  min-height: 64px;
+  padding: 0 18px;
+  border: 0;
+  border-bottom: 1px solid #e7edf5;
+  color: #475569;
+  background: #fff;
+  font-size: 12.5px;
+  text-align: left;
+}
+
+.signing-inbox-row:last-child {
+  border-bottom: 0;
+}
+
+.signing-inbox-row:hover {
+  background: #fffbeb;
+}
+
+.signing-inbox-row[hidden] {
+  display: none;
+}
+
+.signing-inbox-row strong {
+  color: #475569;
+  font-weight: 500;
+}
+
+.signing-inbox-title {
+  min-width: 0;
+  overflow: hidden;
+  display: grid;
+  gap: 4px;
+  color: #1e293b;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.signing-inbox-title small {
+  color: #94a3b8;
+  font-size: 11px;
+}
+
+.signing-inbox-row em {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: #2563eb;
+  font-style: normal;
+  font-size: 11.5px;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.signing-inbox-row em::before {
+  width: 6px;
+  height: 6px;
+  flex: 0 0 auto;
+  border-radius: 50%;
+  background: currentColor;
+  content: "";
+}
+
+.signing-inbox-row em.signing {
+  color: #7c3aed;
+}
+
+.signing-inbox-row > .material-symbols-outlined {
+  color: #94a3b8;
+  font-size: 20px;
+}
+
 .sign-detail-layout {
   height: calc(100vh - 48px);
   display: grid;
@@ -3708,17 +3863,25 @@ select:focus {
 }
 
 @media (max-width: 900px) {
+  #signingInboxView .signing-inbox-layout,
   #signDetailView .sign-detail-layout {
     grid-template-columns: minmax(0, 1fr);
   }
 
+  #signingInboxView .workflow-menu,
   #signDetailView .workflow-menu {
     display: none;
   }
 
+  #signingInboxView .topbar-title,
+  #signingInboxView .topbar-info,
   #signDetailView .topbar-title,
   #signDetailView .topbar-info {
     display: none;
+  }
+
+  .signing-inbox-panel {
+    padding: 22px 16px;
   }
 
   #signDetailView .draft-detail-header {
@@ -3845,6 +4008,16 @@ select:focus {
 }
 
 @media (max-width: 640px) {
+  .signing-inbox-header {
+    align-items: stretch;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .signing-inbox-total {
+    align-self: flex-start;
+  }
+
   .user-info {
     display: none;
   }

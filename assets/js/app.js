@@ -7,33 +7,7 @@ const detailDocuments = cloneData(window.GENCO_DETAIL_DOCUMENTS);
 detailDocuments.completedDraftFiles = detailDocuments.completedDraftFiles || [];
 
 const signingFiles = {
-  main: [
-    {
-      name: "To trinh trinh de xuat mua thiet bi CNTT.docx",
-      size: 248 * 1024,
-      role: "main"
-    },
-    {
-      name: "UQ dong chi Le Minh mua thiet bi CNTT.docx",
-      size: 182 * 1024,
-      role: "attachment"
-    },
-    {
-      name: "Du thao Cong van phe duyet chu truong mua sam thiet bi CNTT.docx",
-      size: 316 * 1024,
-      role: "attachment"
-    },
-    {
-      name: "Du thao To trinh thong qua ke hoach lua chon nha thau.docx",
-      size: 274 * 1024,
-      role: "attachment"
-    },
-    {
-      name: "Du thao Quyet dinh thanh lap to tham dinh ho so mua sam.docx",
-      size: 198 * 1024,
-      role: "attachment"
-    }
-  ]
+  main: []
 };
 
 const appLayout = document.getElementById("appLayout");
@@ -114,6 +88,102 @@ function materialIcon(name) {
     </span>
   `;
 }
+
+const workflowMenuItems = [
+  {
+    key: "create",
+    label: "Tạo hồ sơ",
+    icon: "note_add",
+    title: "Tạo mới hồ sơ dự thảo"
+  },
+  {
+    key: "all",
+    label: "Tất cả hồ sơ",
+    icon: "folder_open",
+    title: "Xem danh sách hồ sơ dự thảo"
+  },
+  {
+    key: "signing",
+    label: "Trình ký",
+    icon: "stylus_note",
+    title: "Xem các trình ký cần ký của bản thân",
+    badge: "5"
+  }
+];
+
+function workflowMenuMarkup(activeKey) {
+  return `
+    <div class="workflow-brand">
+      <div class="brand-orbit">✦</div>
+      <div>
+        <div class="workflow-brand-title">Genco3 Workflow</div>
+        <div class="workflow-brand-subtitle">Quản lý quy trình</div>
+      </div>
+      <span class="material-symbols-outlined brand-collapse">chevron_left</span>
+    </div>
+
+    <nav class="workflow-nav" aria-label="Điều hướng quy trình">
+      ${workflowMenuItems
+        .map(
+          (item) => `
+            <button
+              class="workflow-nav-item ${item.key === activeKey ? "active" : ""}"
+              type="button"
+              data-workflow-menu-action="${item.key}"
+              title="${escapeHtml(item.title)}"
+              ${item.key === activeKey ? 'aria-current="page"' : ""}
+            >
+              <span class="material-symbols-outlined">${item.icon}</span>
+              ${item.label}
+              ${
+                item.badge
+                  ? `<span class="nav-badge blue">${item.badge}</span>`
+                  : ""
+              }
+            </button>
+          `
+        )
+        .join("")}
+    </nav>
+
+    <div class="workflow-menu-footer">
+      <div class="workflow-account">
+        <span class="workflow-avatar"></span>
+        <div>
+          <div class="workflow-account-name">Lê Văn Danh</div>
+          <div class="workflow-account-mail">Tổng Giám đốc</div>
+        </div>
+        <span class="material-symbols-outlined">more_vert</span>
+      </div>
+    </div>
+  `;
+}
+
+function renderWorkflowMenus() {
+  document.querySelectorAll("[data-workflow-menu]").forEach((menu) => {
+    menu.innerHTML = workflowMenuMarkup(menu.dataset.activeMenu || "all");
+  });
+}
+
+function setWorkflowMenuActive(screenId, activeKey) {
+  const menu = document.querySelector(`#${screenId} [data-workflow-menu]`);
+
+  if (!menu) return;
+
+  menu.dataset.activeMenu = activeKey;
+  menu.querySelectorAll("[data-workflow-menu-action]").forEach((item) => {
+    const isActive = item.dataset.workflowMenuAction === activeKey;
+    item.classList.toggle("active", isActive);
+
+    if (isActive) {
+      item.setAttribute("aria-current", "page");
+    } else {
+      item.removeAttribute("aria-current");
+    }
+  });
+}
+
+renderWorkflowMenus();
 
 function fallbackCopyText(text) {
   const textarea = document.createElement("textarea");
@@ -459,8 +529,7 @@ function renderSigningFiles(target) {
   container.innerHTML = files
     .map((file, index) => {
       const extension = fileExtension(file.name);
-      const hasCompletedDraftTag =
-        file.completedDraft || index === 3 || index === 4;
+      const hasCompletedDraftTag = file.completedDraft;
 
       return `
         <div class="file-item sign-file-item">
@@ -1869,15 +1938,29 @@ function showWorkflowList() {
   document.getElementById("appLayout").classList.add("screen-hidden");
   document.getElementById("signCreateView").classList.add("screen-hidden");
   document.getElementById("signDetailView").classList.add("screen-hidden");
+  document.getElementById("signingInboxView").classList.add("screen-hidden");
   document.getElementById("listView").classList.remove("screen-hidden");
+  setWorkflowMenuActive("listView", "all");
   window.scrollTo(0, 0);
 }
 
 function showCreateScreen() {
   document.getElementById("signCreateView").classList.add("screen-hidden");
   document.getElementById("signDetailView").classList.add("screen-hidden");
+  document.getElementById("signingInboxView").classList.add("screen-hidden");
   document.getElementById("listView").classList.add("screen-hidden");
   document.getElementById("appLayout").classList.remove("screen-hidden");
+  setWorkflowMenuActive("appLayout", "create");
+}
+
+function showSigningInbox() {
+  document.getElementById("appLayout").classList.add("screen-hidden");
+  document.getElementById("listView").classList.add("screen-hidden");
+  document.getElementById("signCreateView").classList.add("screen-hidden");
+  document.getElementById("signDetailView").classList.add("screen-hidden");
+  document.getElementById("signingInboxView").classList.remove("screen-hidden");
+  setWorkflowMenuActive("signingInboxView", "signing");
+  window.scrollTo(0, 0);
 }
 
 function configureSignCreateMode(mode) {
@@ -1908,7 +1991,9 @@ function showSignCreateScreen(mode = "create") {
   document.getElementById("appLayout").classList.add("screen-hidden");
   document.getElementById("listView").classList.add("screen-hidden");
   document.getElementById("signDetailView").classList.add("screen-hidden");
+  document.getElementById("signingInboxView").classList.add("screen-hidden");
   document.getElementById("signCreateView").classList.remove("screen-hidden");
+  setWorkflowMenuActive("signCreateView", "all");
   renderSigningFiles("main");
   window.scrollTo(0, 0);
 }
@@ -2010,14 +2095,16 @@ function createAdditionalSigningCard() {
   syncSignSummaryFromActiveCard();
 }
 
-function showSignDetailScreen() {
+function showSignDetailScreen(menuContext = "all") {
   hydrateWorkflowListFromForm();
   renderSignDetailFiles();
 
   document.getElementById("appLayout").classList.add("screen-hidden");
   document.getElementById("listView").classList.add("screen-hidden");
   document.getElementById("signCreateView").classList.add("screen-hidden");
+  document.getElementById("signingInboxView").classList.add("screen-hidden");
   document.getElementById("signDetailView").classList.remove("screen-hidden");
+  setWorkflowMenuActive("signDetailView", menuContext);
   window.scrollTo(0, 0);
 }
 
@@ -2176,9 +2263,21 @@ document
     if (action) action();
   });
 
-document
-  .getElementById("listCreateProcessButton")
-  .addEventListener("click", showCreateScreen);
+document.addEventListener("click", (event) => {
+  const menuItem = event.target.closest("[data-workflow-menu-action]");
+
+  if (!menuItem) return;
+
+  const action = menuItem.dataset.workflowMenuAction;
+
+  if (action === "create") {
+    showCreateScreen();
+  } else if (action === "all") {
+    showWorkflowList();
+  } else if (action === "signing") {
+    showSigningInbox();
+  }
+});
 
 document
   .getElementById("signBackButton")
@@ -2376,6 +2475,8 @@ const stopFeedbackButton = document.getElementById("stopFeedbackButton");
 const stopFeedbackMenu = document.getElementById("stopFeedbackMenu");
 const signingCardRow = document.getElementById("signingCardRow");
 const signingQuickFilters = document.getElementById("signingQuickFilters");
+const signingInboxFilters = document.getElementById("signingInboxFilters");
+const signingInboxTable = document.querySelector(".signing-inbox-table");
 const signDetailActions = document.getElementById("signDetailActions");
 
 function closeDetailActionMenu() {
@@ -2589,6 +2690,55 @@ signingQuickFilters?.addEventListener("click", (event) => {
   if (!filter || !signingQuickFilters.contains(filter)) return;
 
   applySigningFilter(filter.dataset.signingFilter);
+});
+
+signingInboxFilters?.addEventListener("click", (event) => {
+  const filter = event.target.closest("[data-signing-inbox-filter]");
+
+  if (!filter || !signingInboxFilters.contains(filter)) return;
+
+  const filterKey = filter.dataset.signingInboxFilter;
+
+  signingInboxFilters
+    .querySelectorAll("[data-signing-inbox-filter]")
+    .forEach((item) => {
+      item.classList.toggle(
+        "active",
+        item.dataset.signingInboxFilter === filterKey
+      );
+    });
+
+  signingInboxTable
+    ?.querySelectorAll("[data-signing-task]")
+    .forEach((task) => {
+      task.hidden =
+        filterKey !== "all" && task.dataset.status !== filterKey;
+    });
+});
+
+signingInboxTable?.addEventListener("click", (event) => {
+  const task = event.target.closest("[data-signing-task]");
+
+  if (!task || !signingInboxTable.contains(task)) return;
+
+  const targetCard = document.querySelector(
+    `.signing-card[data-status="${task.dataset.status}"]`
+  );
+
+  if (targetCard) {
+    document
+      .querySelectorAll(".signing-card")
+      .forEach((card) => card.classList.remove("active"));
+
+    targetCard.classList.add("active");
+    targetCard.querySelector("strong").textContent =
+      task.querySelector("strong").textContent.trim();
+    targetCard.querySelector("span").textContent = task
+      .querySelector(".signing-inbox-title")
+      .childNodes[0].textContent.trim();
+  }
+
+  showSignDetailScreen("signing");
 });
 
 signingCardRow?.addEventListener("click", (event) => {

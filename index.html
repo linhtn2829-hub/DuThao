@@ -13,7 +13,11 @@
 
 <body>
   <div id="appLayout" class="app-layout">
-    <aside class="workflow-menu app-create-left-menu">
+    <aside
+      class="workflow-menu app-create-left-menu"
+      data-workflow-menu
+      data-active-menu="create"
+    >
       <div class="workflow-brand">
         <div class="brand-orbit">✦</div>
         <div>
@@ -441,7 +445,11 @@
     </header>
 
     <div class="workflow-layout">
-      <aside class="workflow-menu">
+      <aside
+        class="workflow-menu"
+        data-workflow-menu
+        data-active-menu="all"
+      >
         <div class="workflow-brand">
           <div class="brand-orbit">✦</div>
           <div>
@@ -930,7 +938,11 @@
   </div>
 
   <div id="signCreateView" class="sign-create-view screen-hidden">
-    <aside class="workflow-menu sign-create-left-menu">
+    <aside
+      class="workflow-menu sign-create-left-menu"
+      data-workflow-menu
+      data-active-menu="all"
+    >
       <div class="workflow-brand">
         <div class="brand-orbit">✦</div>
         <div>
@@ -1428,6 +1440,138 @@
     </div>
   </div>
 
+  <div id="signingInboxView" class="workflow-shell screen-hidden">
+    <header class="workflow-topbar">
+      <div class="topbar-left">
+        <span class="material-symbols-outlined">apps</span>
+        <span class="topbar-product">Power Apps</span>
+        <span class="topbar-divider"></span>
+        <span class="topbar-title">WF-Trung Tâm Quản Lý Quy Trình Số</span>
+        <span class="material-symbols-outlined topbar-info">info</span>
+      </div>
+
+      <div class="topbar-actions">
+        <button class="topbar-share" type="button">
+          <span class="material-symbols-outlined">ios_share</span>
+          Share
+          <span class="material-symbols-outlined">expand_more</span>
+        </button>
+        <span class="material-symbols-outlined">fullscreen</span>
+        <span class="material-symbols-outlined">download</span>
+        <span class="material-symbols-outlined">settings</span>
+        <span class="material-symbols-outlined">help</span>
+        <span class="workflow-avatar"></span>
+      </div>
+    </header>
+
+    <div class="signing-inbox-layout">
+      <aside
+        class="workflow-menu"
+        data-workflow-menu
+        data-active-menu="signing"
+      ></aside>
+
+      <main class="signing-inbox-panel">
+        <header class="signing-inbox-header">
+          <div>
+            <span class="signing-inbox-eyebrow">Công việc của tôi</span>
+            <h1>Trình ký cần xử lý</h1>
+            <p>Văn bản đang chờ Lê Văn Danh xem xét và ký duyệt.</p>
+          </div>
+          <span class="signing-inbox-total">5 văn bản</span>
+        </header>
+
+        <div
+          id="signingInboxFilters"
+          class="signing-quick-filters signing-inbox-filters"
+          role="group"
+          aria-label="Lọc nhanh công việc trình ký"
+        >
+          <button class="active" type="button" data-signing-inbox-filter="all">
+            Tất cả <span>5</span>
+          </button>
+          <button type="button" data-signing-inbox-filter="waiting">
+            Chờ ký <span>3</span>
+          </button>
+          <button type="button" data-signing-inbox-filter="signing">
+            Đang ký <span>2</span>
+          </button>
+        </div>
+
+        <section class="signing-inbox-table" aria-label="Danh sách trình ký cần xử lý">
+          <div class="signing-inbox-table-head" aria-hidden="true">
+            <span>Mã trình ký</span>
+            <span>Trích yếu</span>
+            <span>Người trình</span>
+            <span>Hạn xử lý</span>
+            <span>Trạng thái</span>
+            <span></span>
+          </div>
+
+          <button class="signing-inbox-row" type="button" data-signing-task data-status="waiting">
+            <strong>TK-2026-0061</strong>
+            <span class="signing-inbox-title">
+              Trình ký phê duyệt kế hoạch triển khai quy trình góp ý
+              <small>QT-DU-THAO-2607-061</small>
+            </span>
+            <span>Nguyễn Minh Anh</span>
+            <span>Hôm nay, 16:30</span>
+            <em class="waiting">Chờ ký</em>
+            <span class="material-symbols-outlined">chevron_right</span>
+          </button>
+
+          <button class="signing-inbox-row" type="button" data-signing-task data-status="signing">
+            <strong>TK-2026-0058</strong>
+            <span class="signing-inbox-title">
+              Trình ký dự thảo quy chế phối hợp giữa các Ban
+              <small>QT-DU-THAO-2607-058</small>
+            </span>
+            <span>Trần Quốc Huy</span>
+            <span>16/07/2026</span>
+            <em class="signing">Đang ký</em>
+            <span class="material-symbols-outlined">chevron_right</span>
+          </button>
+
+          <button class="signing-inbox-row" type="button" data-signing-task data-status="waiting">
+            <strong>TK-2026-0055</strong>
+            <span class="signing-inbox-title">
+              Trình ký văn bản dự thảo quy trình góp ý
+              <small>QT-DU-THAO-2607-055</small>
+            </span>
+            <span>Nguyễn Minh Anh</span>
+            <span>17/07/2026</span>
+            <em class="waiting">Chờ ký</em>
+            <span class="material-symbols-outlined">chevron_right</span>
+          </button>
+
+          <button class="signing-inbox-row" type="button" data-signing-task data-status="signing">
+            <strong>TK-2026-0052</strong>
+            <span class="signing-inbox-title">
+              Trình ký quyết định ban hành tài liệu nội bộ
+              <small>QT-DU-THAO-2607-052</small>
+            </span>
+            <span>Lê Thu Hương</span>
+            <span>18/07/2026</span>
+            <em class="signing">Đang ký</em>
+            <span class="material-symbols-outlined">chevron_right</span>
+          </button>
+
+          <button class="signing-inbox-row" type="button" data-signing-task data-status="waiting">
+            <strong>TK-2026-0049</strong>
+            <span class="signing-inbox-title">
+              Trình ký báo cáo tổng hợp ý kiến các đơn vị
+              <small>QT-DU-THAO-2607-049</small>
+            </span>
+            <span>Vũ Hải Nam</span>
+            <span>19/07/2026</span>
+            <em class="waiting">Chờ ký</em>
+            <span class="material-symbols-outlined">chevron_right</span>
+          </button>
+        </section>
+      </main>
+    </div>
+  </div>
+
   <div id="signDetailView" class="workflow-shell screen-hidden">
     <header class="workflow-topbar">
       <div class="topbar-left">
@@ -1453,7 +1597,11 @@
     </header>
 
     <div class="sign-detail-layout">
-      <aside class="workflow-menu">
+      <aside
+        class="workflow-menu"
+        data-workflow-menu
+        data-active-menu="all"
+      >
         <div class="workflow-brand">
           <div class="brand-orbit">✦</div>
           <div>
