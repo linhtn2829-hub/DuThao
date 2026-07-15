@@ -107,7 +107,7 @@ const workflowMenuItems = [
     label: "Trình ký",
     icon: "stylus_note",
     title: "Xem các trình ký cần ký của bản thân",
-    badge: "5"
+    badge: "6"
   }
 ];
 
@@ -183,7 +183,102 @@ function setWorkflowMenuActive(screenId, activeKey) {
   });
 }
 
+let selectedPowerPersonFilter = "owner";
+let signerActionModalMode = "";
+
+function powerAppHeaderMarkup() {
+  return `
+    <div class="topbar-left">
+      <span class="material-symbols-outlined power-app-launcher">apps</span>
+      <span class="topbar-product">Power Apps</span>
+      <span class="topbar-divider"></span>
+      <span class="topbar-title">GenCo3 Work Flow</span>
+      <span class="material-symbols-outlined topbar-info">info</span>
+    </div>
+
+    <div class="power-app-header-center">
+      <label class="power-person-select">
+        <span class="material-symbols-outlined">person</span>
+        <select data-power-person-filter aria-label="Chọn nhóm người ký">
+          <option value="owner" ${selectedPowerPersonFilter === "owner" ? "selected" : ""}>
+            Chủ trì
+          </option>
+          <option value="department-pic" ${selectedPowerPersonFilter === "department-pic" ? "selected" : ""}>
+            PIC phòng ban chủ trì
+          </option>
+          <option value="reviewer" ${selectedPowerPersonFilter === "reviewer" ? "selected" : ""}>
+            Người góp ý
+          </option>
+          <option value="approval-delegate" ${selectedPowerPersonFilter === "approval-delegate" ? "selected" : ""}>
+            Người được chuyển uỷ quyền phê duyệt
+          </option>
+          <option value="consultation-delegate" ${selectedPowerPersonFilter === "consultation-delegate" ? "selected" : ""}>
+            Người được chuyển uỷ quyền Xin ý kiến
+          </option>
+          <option value="primary-signer" ${selectedPowerPersonFilter === "primary-signer" ? "selected" : ""}>
+            Người ký chính
+          </option>
+          <option value="related-department-signer" ${selectedPowerPersonFilter === "related-department-signer" ? "selected" : ""}>
+            Người ký trong list ban liên quan
+          </option>
+          <option value="related-leader-signer" ${selectedPowerPersonFilter === "related-leader-signer" ? "selected" : ""}>
+            Người ký trong list lãnh đạo liên quan
+          </option>
+        </select>
+      </label>
+    </div>
+
+    <div class="topbar-actions">
+      <button class="topbar-share" type="button" title="Chia sẻ">
+        <span class="material-symbols-outlined">ios_share</span>
+        Share
+        <span class="material-symbols-outlined">expand_more</span>
+      </button>
+      <button class="power-header-action" type="button" title="Toàn màn hình" aria-label="Toàn màn hình">
+        <span class="material-symbols-outlined">fullscreen</span>
+      </button>
+      <button class="power-header-action" type="button" title="Tải xuống" aria-label="Tải xuống">
+        <span class="material-symbols-outlined">download</span>
+      </button>
+      <button class="power-header-action" type="button" title="Cài đặt" aria-label="Cài đặt">
+        <span class="material-symbols-outlined">settings</span>
+      </button>
+      <button class="power-header-action" type="button" title="Trợ giúp" aria-label="Trợ giúp">
+        <span class="material-symbols-outlined">help</span>
+      </button>
+      <span class="workflow-avatar" title="Lê Văn Danh"></span>
+    </div>
+  `;
+}
+
+function renderPowerAppHeaders() {
+  document.querySelectorAll("[data-power-app-header]").forEach((header) => {
+    header.innerHTML = powerAppHeaderMarkup();
+  });
+}
+
 renderWorkflowMenus();
+renderPowerAppHeaders();
+
+document.addEventListener("change", (event) => {
+  const select = event.target.closest("[data-power-person-filter]");
+
+  if (!select) return;
+
+  selectedPowerPersonFilter = select.value;
+  document.querySelectorAll("[data-power-person-filter]").forEach((item) => {
+    item.value = selectedPowerPersonFilter;
+  });
+
+  syncSigningListForRole();
+  syncSigningInboxForRole();
+
+  const activeSigningStatus =
+    document.querySelector(".signing-card.active")?.dataset.status || "draft";
+  renderSignDetailActions(activeSigningStatus);
+
+  showToast(`Đã chọn: ${select.options[select.selectedIndex].text}.`);
+});
 
 function fallbackCopyText(text) {
   const textarea = document.createElement("textarea");
@@ -1586,25 +1681,74 @@ function renderSignDetailFiles() {
 
 const signApprovalPeople = [
   {
-    name: "Ban Kinh doanh - Thị trường điện",
-    content:
-      "Đã kiểm tra nội dung nghiệp vụ, thống nhất với dự thảo và đề nghị tiếp tục trình cấp có thẩm quyền phê duyệt."
+    name: "Nguyễn Minh Anh",
+    role: "Chuyên viên chính",
+    unit: "Ban Pháp chế",
+    content: "Đã hoàn thiện hồ sơ và gửi trình ký."
   },
   {
-    name: "Ban Tài chính - Kế toán",
-    content:
-      "Đã rà soát các nội dung tài chính liên quan, số liệu và nguồn kinh phí phù hợp với hồ sơ trình ký."
+    name: "Trần Quốc Huy",
+    role: "Trưởng Ban",
+    unit: "Ban Pháp chế",
+    content: "Đã kiểm tra hồ sơ và đồng ý trình cấp có thẩm quyền."
   },
   {
-    name: "TV. HĐQT Nguyễn Minh Khoa",
-    content:
-      "Thống nhất nội dung văn bản và đề nghị đơn vị chủ trì hoàn thiện thể thức trước khi phát hành."
+    name: "Nguyễn Thị Thu Hà",
+    role: "Phó Trưởng Ban",
+    unit: "Ban Hành chính và Nhân sự",
+    group: "Ban Hành chính và Nhân sự",
+    transferTarget: "Trần Văn Tuấn",
+    content: "Đã rà soát nội dung thuộc phạm vi Ban Hành chính và Nhân sự."
   },
   {
-    name: "TGĐ. Lê Văn Danh",
+    name: "Trần Văn Tuấn",
+    role: "Trưởng phòng Nhân sự",
+    unit: "Ban Hành chính và Nhân sự",
+    group: "Ban Hành chính và Nhân sự",
+    content: "Đồng ý nội dung trình ký sau khi tiếp nhận chuyển ký."
+  },
+  {
+    name: "Phạm Quốc Bảo",
+    role: "Phó Trưởng Ban",
+    unit: "Ban Kỹ thuật",
+    group: "Ban Kỹ thuật",
+    content: "Đã kiểm tra các nội dung kỹ thuật và thống nhất trình ký."
+  },
+  {
+    name: "Đặng Hoàng Anh",
+    role: "Thành viên HĐQT",
+    unit: "Văn phòng HĐQT",
+    transferTarget: "Lê Quang Huy",
+    content: "Thống nhất nội dung văn bản và đề nghị tiếp tục quy trình ký."
+  },
+  {
+    name: "Lê Quang Huy",
+    role: "Phó Tổng Giám đốc",
+    unit: "Ban Điều hành",
+    content: "Đã rà soát và đồng ý nội dung thuộc phạm vi phụ trách."
+  },
+  {
+    name: "Nguyễn Minh Khoa",
+    role: "Thành viên HĐQT",
+    unit: "Hội đồng Quản trị",
+    transferTarget: "Lê Văn Danh",
+    content: "Thống nhất nội dung văn bản và đề nghị hoàn thiện thể thức phát hành."
+  },
+  {
+    name: "Lê Văn Danh",
+    role: "Tổng Giám đốc",
+    unit: "Ban Điều hành",
     content:
-      "Đồng ý phê duyệt văn bản theo nội dung trình, giao Ban Pháp chế phối hợp triển khai các bước tiếp theo."
+      "Đồng ý phê duyệt văn bản theo nội dung trình, giao Ban Pháp chế phối hợp triển khai."
   }
+];
+
+const signingTimelineSteps = [
+  { title: "Trình ký", people: [0] },
+  { title: "Lãnh đạo Ban chủ trì", people: [1] },
+  { title: "Lãnh đạo Ban liên quan", people: [2, 3, 4] },
+  { title: "Lãnh đạo liên quan", people: [5, 6] },
+  { title: "Lãnh đạo phê duyệt", people: [7, 8] }
 ];
 
 const signingStatusConfig = {
@@ -1646,6 +1790,53 @@ const signingStatusConfig = {
   }
 };
 
+function getSigningCardPresentation(statusKey) {
+  if (statusKey === "rejected") {
+    return {
+      statusLabel: "Bản nháp",
+      statusClass: "draft",
+      tagLabel: "Trả lại",
+      tagClass: "returned"
+    };
+  }
+
+  if (statusKey === "recalled") {
+    return {
+      statusLabel: "Bản nháp",
+      statusClass: "draft",
+      tagLabel: "Thu hồi",
+      tagClass: "recalled"
+    };
+  }
+
+  const statusConfig = signingStatusConfig[statusKey] || signingStatusConfig.draft;
+
+  return {
+    statusLabel: statusConfig.label,
+    statusClass: statusConfig.cardClass,
+    tagLabel: "-",
+    tagClass: "is-empty"
+  };
+}
+
+function applySigningCardPresentation(card, statusKey) {
+  if (!card) return;
+
+  const presentation = getSigningCardPresentation(statusKey);
+  const status = card.querySelector("em");
+  const tag = card.querySelector("[data-signing-label]");
+
+  if (status) {
+    status.textContent = presentation.statusLabel;
+    status.className = presentation.statusClass;
+  }
+
+  if (tag) {
+    tag.textContent = presentation.tagLabel;
+    tag.className = `signing-card-label ${presentation.tagClass}`;
+  }
+}
+
 const signActionConfig = {
   edit: { label: "Chỉnh sửa", icon: "edit", variant: "secondary" },
   submit: { label: "Trình ký", icon: "send", variant: "primary" },
@@ -1665,20 +1856,179 @@ const signActionConfig = {
   complete: { label: "Hoàn thành", icon: "task_alt", variant: "primary" }
 };
 
-function approvalStateFor(statusKey, index) {
+function signingTimelineState(statusKey) {
+  const card = document.querySelector(".signing-card.active");
+
+  initializeSigningFlowState(card);
+
+  const flow = {
+    department: card?.dataset.departmentSignerState || "pending",
+    leader: card?.dataset.leaderSignerState || "pending",
+    primary: card?.dataset.primarySignerState || "pending"
+  };
+
   if (statusKey === "signed") {
-    return { label: "Đã ký", className: "green" };
+    flow.department = "approved";
+    flow.leader = "approved";
+    flow.primary = "approved";
   }
 
-  if (statusKey === "signing" && index === 0) {
-    return { label: "Đã ký", className: "green" };
+  if (
+    statusKey === "rejected" &&
+    !Object.values(flow).some((state) => state === "rejected")
+  ) {
+    flow.department = "rejected";
   }
 
-  if (statusKey === "rejected" && index === 1) {
-    return { label: "Từ chối", className: "red" };
+  if (statusKey === "draft") {
+    return { flow, phases: ["current", "pending", "pending", "pending", "pending"] };
   }
 
-  return { label: "Chưa ký", className: "" };
+  if (statusKey === "recalled") {
+    return { flow, phases: ["done", "current", "stopped", "stopped", "stopped"] };
+  }
+
+  const phases = ["done", "done", "pending", "pending", "pending"];
+
+  if (["rejected", "stopped"].includes(flow.department)) {
+    phases[2] = "current";
+    phases[3] = "stopped";
+    phases[4] = "stopped";
+    return { flow, phases };
+  }
+
+  if (flow.department !== "approved") {
+    phases[2] = "current";
+    return { flow, phases };
+  }
+
+  phases[2] = "done";
+
+  if (["rejected", "stopped"].includes(flow.leader)) {
+    phases[3] = "current";
+    phases[4] = "stopped";
+    return { flow, phases };
+  }
+
+  if (flow.leader !== "approved") {
+    phases[3] = "current";
+    return { flow, phases };
+  }
+
+  phases[3] = "done";
+
+  if (["rejected", "stopped"].includes(flow.primary)) {
+    phases[4] = "current";
+    return { flow, phases };
+  }
+
+  phases[4] = flow.primary === "approved" ? "done" : "current";
+  return { flow, phases };
+}
+
+function signingTimelinePersonStatus(stepIndex, position, phase, flow) {
+  if (phase === "stopped") {
+    return { label: "Đã dừng", className: "stopped" };
+  }
+
+  if (phase === "done") {
+    const label = stepIndex === 0 ? "Đã trình" : stepIndex === 1 ? "Đã phê duyệt" : "Đã ký";
+    return { label, className: "green" };
+  }
+
+  if (phase === "pending") {
+    const label = stepIndex < 2 ? "Chưa thực hiện" : "Chưa ký";
+    return { label, className: "gray" };
+  }
+
+  if (stepIndex === 0) {
+    return { label: "Đang thực hiện", className: "blue" };
+  }
+
+  if (stepIndex === 1) {
+    return { label: "Chờ phê duyệt", className: "blue" };
+  }
+
+  const flowState =
+    stepIndex === 2 ? flow.department : stepIndex === 3 ? flow.leader : flow.primary;
+
+  if (flowState === "stopped") {
+    return { label: "Đã dừng", className: "stopped" };
+  }
+
+  if (flowState === "rejected") {
+    return position === 0
+      ? { label: "Từ chối ký", className: "red" }
+      : { label: "Đã dừng", className: "stopped" };
+  }
+
+  if (flowState === "transferred") {
+    return position === 0
+      ? { label: "Đã chuyển ký", className: "violet" }
+      : position === 1
+        ? { label: "Cần ký", className: "blue" }
+        : { label: "Chưa ký", className: "gray" };
+  }
+
+  return position === 0
+    ? { label: "Cần ký", className: "blue" }
+    : { label: "Chưa đến lượt", className: "gray" };
+}
+
+function renderSigningTimelinePeople(step, stepIndex, phase, flow) {
+  let currentGroup = "";
+
+  return step.people
+    .map((personIndex, position) => {
+      const person = signApprovalPeople[personIndex];
+      const status = signingTimelinePersonStatus(
+        stepIndex,
+        position,
+        phase,
+        flow
+      );
+      const groupMarkup =
+        person.group && person.group !== currentGroup
+          ? `<div class="signing-timeline-group">${escapeHtml(person.group)}</div>`
+          : "";
+      const transferMarkup =
+        status.className === "violet" && person.transferTarget
+          ? `<small class="signing-timeline-transfer">
+               <span class="material-symbols-outlined">subdirectory_arrow_right</span>
+               Chuyển ký đến ${escapeHtml(person.transferTarget)}
+             </small>`
+          : "";
+      const viewMarkup =
+        stepIndex >= 2 && status.className === "green"
+          ? `<button
+               class="sign-approval-view"
+               type="button"
+               data-sign-content-index="${personIndex}"
+               title="Xem nội dung"
+               aria-label="Xem nội dung ký của ${escapeHtml(person.name)}"
+             >
+               <span class="material-symbols-outlined">visibility</span>
+             </button>`
+          : "";
+
+      currentGroup = person.group || currentGroup;
+
+      return `
+        ${groupMarkup}
+        <div class="signing-timeline-person">
+          <div class="signing-timeline-person-name">
+            <strong>${escapeHtml(person.name)}</strong>
+            ${transferMarkup}
+          </div>
+          <span>${escapeHtml(person.role)} · ${escapeHtml(person.unit)}</span>
+          <div class="signing-timeline-person-action">
+            ${viewMarkup}
+            <em class="${status.className}">${status.label}</em>
+          </div>
+        </div>
+      `;
+    })
+    .join("");
 }
 
 function renderSignApprovalTable(statusKey) {
@@ -1686,48 +2036,166 @@ function renderSignApprovalTable(statusKey) {
 
   if (!container) return;
 
-  const isDraft = statusKey === "draft";
-  container.classList.toggle("draft", isDraft);
-  container.innerHTML = `
-    <div class="sign-approval-head">
-      <span>TT</span>
-      <span>Lãnh đạo phê duyệt</span>
-      ${isDraft ? "" : "<span>Nội dung</span><span>Trạng thái</span>"}
-    </div>
-    ${signApprovalPeople
-      .map((person, index) => {
-        const approvalState = approvalStateFor(statusKey, index);
-        const isSigned = approvalState.label === "Đã ký";
+  const { flow, phases } = signingTimelineState(statusKey);
 
+  container.className = "sign-approval-table signing-timeline";
+  container.innerHTML = `
+    ${signingTimelineSteps
+      .map((step, index) => {
+        const phase = phases[index];
         return `
-          <div class="sign-approval-row">
-            <span>${index + 1}</span>
-            <strong>${escapeHtml(person.name)}</strong>
-            ${
-              isDraft
-                ? ""
-                : `<div class="sign-approval-content">
-                     ${
-                       isSigned
-                         ? `<span title="${escapeHtml(person.content)}">${escapeHtml(person.content)}</span>
-                            <button
-                              class="sign-approval-view"
-                              type="button"
-                              data-sign-content-index="${index}"
-                              title="Xem nội dung"
-                              aria-label="Xem nội dung ký của ${escapeHtml(person.name)}"
-                            >
-                              <span class="material-symbols-outlined">visibility</span>
-                            </button>`
-                         : '<span class="sign-approval-empty">-</span>'
-                     }
-                   </div>
-                   <em class="${approvalState.className}">${approvalState.label}</em>`
-            }
+          <div class="signing-timeline-step ${phase}">
+            <span class="signing-timeline-marker">${index + 1}</span>
+            <div class="signing-timeline-card">
+              <h3>${escapeHtml(step.title)}</h3>
+              <div class="signing-timeline-people">
+                ${renderSigningTimelinePeople(step, index, phase, flow)}
+              </div>
+            </div>
           </div>
         `;
       })
       .join("")}
+  `;
+}
+
+const signerRoleFlow = {
+  "related-department-signer": {
+    stateKey: "departmentSignerState",
+    recipientKey: "departmentSignerTransferRecipient",
+    decisionContentKey: "departmentSignerDecisionContent",
+    transferContentKey: "departmentSignerTransferContent",
+    prerequisites: []
+  },
+  "related-leader-signer": {
+    stateKey: "leaderSignerState",
+    recipientKey: "leaderSignerTransferRecipient",
+    decisionContentKey: "leaderSignerDecisionContent",
+    transferContentKey: "leaderSignerTransferContent",
+    prerequisites: ["departmentSignerState"]
+  },
+  "primary-signer": {
+    stateKey: "primarySignerState",
+    recipientKey: "primarySignerTransferRecipient",
+    decisionContentKey: "primarySignerDecisionContent",
+    transferContentKey: "primarySignerTransferContent",
+    prerequisites: ["departmentSignerState", "leaderSignerState"]
+  }
+};
+
+function isSignerRole() {
+  return Boolean(signerRoleFlow[selectedPowerPersonFilter]);
+}
+
+function initializeSigningFlowState(card) {
+  if (!card || card.dataset.signingFlowInitialized === "true") return;
+
+  card.dataset.departmentSignerState = "pending";
+  card.dataset.leaderSignerState = "pending";
+  card.dataset.primarySignerState = "pending";
+
+  if (card.dataset.status === "signing") {
+    card.dataset.departmentSignerState = "approved";
+  }
+
+  if (card.dataset.status === "signed") {
+    card.dataset.departmentSignerState = "approved";
+    card.dataset.leaderSignerState = "approved";
+    card.dataset.primarySignerState = "approved";
+  }
+
+  card.dataset.signingFlowInitialized = "true";
+}
+
+function activeSignerRoleState() {
+  const card = document.querySelector(".signing-card.active");
+  const role = signerRoleFlow[selectedPowerPersonFilter];
+
+  initializeSigningFlowState(card);
+
+  if (!card || !role) {
+    return {
+      card,
+      role,
+      state: "pending",
+      recipient: "",
+      prerequisitesSigned: false
+    };
+  }
+
+  return {
+    card,
+    role,
+    state: card.dataset[role.stateKey] || "pending",
+    recipient: card.dataset[role.recipientKey] || "",
+    prerequisitesSigned: role.prerequisites.every(
+      (stateKey) => card.dataset[stateKey] === "approved"
+    )
+  };
+}
+
+function renderSignerRoleActions(container) {
+  const { card, state, prerequisitesSigned } = activeSignerRoleState();
+  const terminalStatus = ["signed", "rejected", "recalled"].includes(
+    card?.dataset.status
+  );
+  const hasCompletedAction = state === "approved" || state === "rejected";
+  const canProcess =
+    !terminalStatus &&
+    !hasCompletedAction &&
+    state === "pending" &&
+    prerequisitesSigned;
+  const canViewSignedFile =
+    !terminalStatus && !hasCompletedAction && !canProcess;
+  const hideActionBar = terminalStatus || hasCompletedAction;
+
+  container.classList.toggle("is-empty", hideActionBar);
+
+  container.innerHTML = `
+    ${
+      canProcess
+        ? `
+          <button
+            class="genco-button genco-button--primary"
+            type="button"
+            data-related-signer-action="approve"
+          >
+            <span class="material-symbols-outlined">check_circle</span>
+            Đồng ý
+          </button>
+          <button
+            class="genco-button genco-button--danger-secondary"
+            type="button"
+            data-related-signer-action="reject"
+          >
+            <span class="material-symbols-outlined">cancel</span>
+            Từ chối
+          </button>
+          <button
+            class="genco-button genco-button--secondary"
+            type="button"
+            data-related-signer-action="transfer"
+          >
+            <span class="material-symbols-outlined">forward_to_inbox</span>
+            Chuyển ký
+          </button>
+        `
+        : ""
+    }
+    ${
+      canProcess || canViewSignedFile
+        ? `
+          <button
+            class="genco-button genco-button--secondary"
+            type="button"
+            data-related-signer-action="view-signed-file"
+          >
+            <span class="material-symbols-outlined">visibility</span>
+            Xem file ký
+          </button>
+        `
+        : ""
+    }
   `;
 }
 
@@ -1741,6 +2209,13 @@ function renderSignDetailActions(statusKey) {
       : config.actions;
 
   if (!container) return;
+
+  if (isSignerRole()) {
+    renderSignerRoleActions(container);
+    return;
+  }
+
+  container.classList.remove("is-empty");
 
   const actionMarkup = actions
     .map((actionKey) => {
@@ -1799,16 +2274,24 @@ function renderSignDetailActions(statusKey) {
 
 function syncSignSummaryFromActiveCard() {
   const activeCard = document.querySelector(".signing-card.active");
-  const summary = activeCard?.querySelector("span")?.textContent.trim();
+  const summary = activeCard
+    ?.querySelector(".signing-card-summary")
+    ?.textContent.trim();
   const code = activeCard?.querySelector("strong")?.textContent.trim();
   const statusKey = activeCard?.dataset.status || "draft";
   const statusConfig = signingStatusConfig[statusKey] || signingStatusConfig.draft;
   const summaryTarget = document.getElementById("signSummaryText");
+  const overviewTitleTarget = document.getElementById("signDetailDraftTitle");
   const codeTarget = document.getElementById("signDetailCodeValue");
   const statusTarget = document.getElementById("signDetailStatus");
 
   if (summary && summaryTarget) {
     summaryTarget.textContent = summary;
+  }
+
+  if (summary && overviewTitleTarget) {
+    overviewTitleTarget.textContent = summary;
+    overviewTitleTarget.title = summary;
   }
 
   if (code && codeTarget) {
@@ -1827,13 +2310,11 @@ function syncSignSummaryFromActiveCard() {
 function updateActiveSigningStatus(statusKey) {
   const activeCard = document.querySelector(".signing-card.active");
   const statusConfig = signingStatusConfig[statusKey];
-  const badge = activeCard?.querySelector("em");
 
-  if (!activeCard || !statusConfig || !badge) return;
+  if (!activeCard || !statusConfig) return;
 
   activeCard.dataset.status = statusKey;
-  badge.textContent = statusConfig.label;
-  badge.className = statusConfig.cardClass;
+  applySigningCardPresentation(activeCard, statusKey);
   syncSignSummaryFromActiveCard();
   updateSigningListCount();
   applySigningFilter("all", false);
@@ -1932,6 +2413,18 @@ function hydrateWorkflowListFromForm() {
     `${state.ccUsers.length} người`;
 }
 
+function mountSignDetailPanel(target) {
+  const panel = document.querySelector(".sign-detail-panel");
+  const host =
+    target === "inbox"
+      ? document.getElementById("signingInboxDetailHost")
+      : document.getElementById("signDetailLayout");
+
+  if (panel && host && panel.parentElement !== host) {
+    host.appendChild(panel);
+  }
+}
+
 function showWorkflowList() {
   hydrateWorkflowListFromForm();
 
@@ -1954,6 +2447,18 @@ function showCreateScreen() {
 }
 
 function showSigningInbox() {
+  if (!isSignerRole()) {
+    selectedPowerPersonFilter = "related-leader-signer";
+    document.querySelectorAll("[data-power-person-filter]").forEach((item) => {
+      item.value = selectedPowerPersonFilter;
+    });
+  }
+
+  hydrateWorkflowListFromForm();
+  renderSignDetailFiles();
+  syncSigningListForRole();
+  syncSigningInboxForRole();
+  mountSignDetailPanel("inbox");
   document.getElementById("appLayout").classList.add("screen-hidden");
   document.getElementById("listView").classList.add("screen-hidden");
   document.getElementById("signCreateView").classList.add("screen-hidden");
@@ -2000,7 +2505,9 @@ function showSignCreateScreen(mode = "create") {
 
 function showSignEditScreen() {
   const activeCard = document.querySelector(".signing-card.active");
-  const activeSummary = activeCard?.querySelector("span")?.textContent.trim();
+  const activeSummary = activeCard
+    ?.querySelector(".signing-card-summary")
+    ?.textContent.trim();
 
   if (activeSummary) {
     document.getElementById("summary").value = activeSummary;
@@ -2012,11 +2519,14 @@ function showSignEditScreen() {
 
 function updateSigningListCount() {
   const cards = [...document.querySelectorAll(".signing-card")];
-  const cardCount = cards.length;
+  const eligibleCards = isSignerRole()
+    ? cards.filter((card) => card.dataset.status !== "draft")
+    : cards;
+  const cardCount = eligibleCards.length;
   const title = document.getElementById("signingListTitle");
 
   if (title) {
-    title.textContent = `Văn bản trình ký · ${cardCount}`;
+    title.textContent = `Danh sách trình ký · ${cardCount}`;
   }
 
   document
@@ -2026,7 +2536,8 @@ function updateSigningListCount() {
       count.textContent =
         filterKey === "all"
           ? cardCount
-          : cards.filter((card) => card.dataset.status === filterKey).length;
+          : eligibleCards.filter((card) => card.dataset.status === filterKey)
+              .length;
     });
 }
 
@@ -2042,7 +2553,12 @@ function applySigningFilter(filterKey, shouldSyncSelection = true) {
   });
 
   cards.forEach((card) => {
-    card.hidden = filterKey !== "all" && card.dataset.status !== filterKey;
+    const hiddenForSignerRole =
+      isSignerRole() && card.dataset.status === "draft";
+    const hiddenForFilter =
+      filterKey !== "all" && card.dataset.status !== filterKey;
+
+    card.hidden = hiddenForSignerRole || hiddenForFilter;
   });
 
   const activeCard = cards.find((card) => card.classList.contains("active"));
@@ -2056,6 +2572,185 @@ function applySigningFilter(filterKey, shouldSyncSelection = true) {
   if (firstVisibleCard) {
     firstVisibleCard.classList.add("active");
     syncSignSummaryFromActiveCard();
+  }
+}
+
+function syncSigningListForRole() {
+  const draftFilter = document.querySelector(
+    '[data-signing-filter="draft"]'
+  );
+  const activeFilter = document.querySelector(
+    "[data-signing-filter].active"
+  );
+  let filterKey = activeFilter?.dataset.signingFilter || "all";
+
+  if (draftFilter) {
+    draftFilter.hidden = isSignerRole();
+  }
+
+  if (isSignerRole() && filterKey === "draft") {
+    filterKey = "all";
+  }
+
+  updateSigningListCount();
+  applySigningFilter(filterKey);
+}
+
+function findSigningCardByCode(code) {
+  return [...document.querySelectorAll(".signing-card")].find(
+    (card) => card.querySelector("strong")?.textContent.trim() === code
+  );
+}
+
+const signingInboxStatusConfig = {
+  "not-turn": {
+    label: "Chưa đến lượt",
+    tooltip: "Bước tuần tự phía trước chưa ký xong."
+  },
+  "needs-sign": {
+    label: "Cần ký",
+    tooltip: "Đã đến lượt và đang chờ người này thao tác."
+  },
+  signed: {
+    label: "Đã ký",
+    tooltip: "Người này đã ký số thành công."
+  },
+  "rejected-sign": {
+    label: "Từ chối ký",
+    tooltip: "Người này đã từ chối ký; văn bản được trả về Bản nháp."
+  },
+  transferred: {
+    label: "Chuyển ký",
+    tooltip: "Việc ký đã được chuyển cho người khác cùng phòng ban."
+  },
+  stopped: {
+    label: "Đã dừng",
+    tooltip: "Dòng đã dừng vì một Ban trong bước song song từ chối ký."
+  }
+};
+
+function setActiveSigningInboxStatus(status) {
+  const activeTask = document.querySelector(
+    ".signing-inbox-table [data-signing-task].active"
+  );
+  const activeCard = document.querySelector(".signing-card.active");
+
+  if (!activeTask || !signingInboxStatusConfig[status]) return;
+
+  [
+    "departmentSignerState",
+    "leaderSignerState",
+    "primarySignerState"
+  ].forEach((stateKey) => {
+    if (activeCard?.dataset[stateKey]) {
+      activeTask.dataset[stateKey] = activeCard.dataset[stateKey];
+    }
+  });
+
+  activeTask.dataset.prototypeStatus = status;
+  syncSigningInboxForRole();
+}
+
+function syncSigningInboxForRole() {
+  const tasks = [
+    ...document.querySelectorAll(".signing-inbox-table [data-signing-task]")
+  ];
+  const role =
+    signerRoleFlow[selectedPowerPersonFilter] ||
+    signerRoleFlow["related-department-signer"];
+  tasks.forEach((task) => {
+    const linkedCard = findSigningCardByCode(task.dataset.signingCode);
+
+    initializeSigningFlowState(linkedCard);
+
+    if (!task.dataset.prototypeStatus) {
+      [
+        "departmentSignerState",
+        "leaderSignerState",
+        "primarySignerState"
+      ].forEach((stateKey) => {
+        if (linkedCard?.dataset[stateKey]) {
+          task.dataset[stateKey] = linkedCard.dataset[stateKey];
+        }
+      });
+    }
+
+    const state = task.dataset[role.stateKey] || "pending";
+    const prerequisitesSigned = role.prerequisites.every(
+      (stateKey) => task.dataset[stateKey] === "approved"
+    );
+    const derivedStatus =
+      state === "approved"
+        ? "signed"
+        : state === "pending" && prerequisitesSigned
+          ? "needs-sign"
+          : "not-turn";
+    const status = task.dataset.prototypeStatus || derivedStatus;
+    const statusConfig =
+      signingInboxStatusConfig[status] || signingInboxStatusConfig["not-turn"];
+    const badge = task.querySelector("[data-signing-inbox-status]");
+
+    task.dataset.status = status;
+
+    if (badge) {
+      badge.className = status;
+      badge.textContent = statusConfig.label;
+      badge.title = statusConfig.tooltip;
+    }
+  });
+
+  const activeSigningCode = document
+    .querySelector(".signing-card.active strong")
+    ?.textContent.trim();
+
+  tasks.forEach((task) => {
+    task.classList.toggle(
+      "active",
+      task.dataset.signingCode === activeSigningCode
+    );
+  });
+
+  const activeFilter = document.querySelector(
+    "[data-signing-inbox-filter].active"
+  );
+  let filterKey = activeFilter?.dataset.signingInboxFilter || "all";
+
+  if (
+    filterKey !== "all" &&
+    !tasks.some((task) => task.dataset.status === filterKey)
+  ) {
+    filterKey = "all";
+  }
+
+  document
+    .querySelectorAll("[data-signing-inbox-filter]")
+    .forEach((filter) => {
+      filter.classList.toggle(
+        "active",
+        filter.dataset.signingInboxFilter === filterKey
+      );
+    });
+
+  tasks.forEach((task) => {
+    task.hidden =
+      filterKey !== "all" && task.dataset.status !== filterKey;
+  });
+
+  document
+    .querySelectorAll("[data-signing-inbox-filter-count]")
+    .forEach((count) => {
+      const status = count.dataset.signingInboxFilterCount;
+      count.textContent = String(
+        status === "all"
+          ? tasks.length
+          : tasks.filter((task) => task.dataset.status === status).length
+      );
+    });
+
+  const total = document.getElementById("signingInboxTotal");
+
+  if (total) {
+    total.textContent = `${tasks.length} văn bản`;
   }
 }
 
@@ -2083,9 +2778,10 @@ function createAdditionalSigningCard() {
   card.dataset.status = "draft";
   card.innerHTML = `
     <strong>${escapeHtml(code)}</strong>
-    <span>${escapeHtml(summary)}</span>
+    <span class="signing-card-summary">${escapeHtml(summary)}</span>
     <small>13/07/2026</small>
     <em class="draft">Bản nháp</em>
+    <span class="signing-card-label is-empty" data-signing-label>-</span>
   `;
   row.prepend(card);
   row.scrollTop = 0;
@@ -2096,8 +2792,10 @@ function createAdditionalSigningCard() {
 }
 
 function showSignDetailScreen(menuContext = "all") {
+  mountSignDetailPanel("standalone");
   hydrateWorkflowListFromForm();
   renderSignDetailFiles();
+  syncSigningListForRole();
 
   document.getElementById("appLayout").classList.add("screen-hidden");
   document.getElementById("listView").classList.add("screen-hidden");
@@ -2201,7 +2899,7 @@ function requestSignSubmitConfirmation() {
           activeCard.dataset.edited = "true";
 
           if (summary) {
-            activeCard.querySelector("span").textContent = summary;
+            activeCard.querySelector(".signing-card-summary").textContent = summary;
           }
         }
 
@@ -2314,6 +3012,13 @@ document.querySelectorAll("[data-go-list]").forEach((item) => {
   item.addEventListener("click", showWorkflowList);
 });
 
+document.querySelectorAll("[data-open-related-draft]").forEach((button) => {
+  button.addEventListener("click", () => {
+    showWorkflowList();
+    showToast("Đã mở dự thảo tương ứng.");
+  });
+});
+
 document.querySelectorAll("[data-copy-target]").forEach((button) => {
   button.addEventListener("click", (event) => {
     event.stopPropagation();
@@ -2330,7 +3035,9 @@ document.querySelectorAll("[data-share-target]").forEach((button) => {
 
 document.querySelectorAll("[data-expand-detail]").forEach((button) => {
   button.addEventListener("click", () => {
-    const screen = button.closest("#listView, #signDetailView");
+    const screen = button.closest(
+      "#listView, #signDetailView, #signingInboxView"
+    );
     const icon = button.querySelector(".material-symbols-outlined");
 
     if (!screen || !icon) return;
@@ -2555,6 +3262,294 @@ function requestSigningStatusChange({ title, message, statusKey, successMessage 
   });
 }
 
+function closeRelatedSignerActionModal() {
+  signerActionModalMode = "";
+  document.getElementById("relatedSignerActionModal").classList.remove("open");
+}
+
+function openRelatedSignerActionModal(mode) {
+  const modalConfig = {
+    approve: {
+      title: "Xác nhận đồng ý",
+      description: "Nhập nội dung ký trước khi xác nhận đồng ý văn bản.",
+      label: "Nội dung",
+      placeholder: "Nhập nội dung ký (không bắt buộc)",
+      defaultValue: "Đồng ý",
+      primaryVariant: "primary"
+    },
+    reject: {
+      title: "Xác nhận Từ chối",
+      description: "Vui lòng nhập lý do từ chối văn bản trình ký.",
+      label: "Lý do từ chối *",
+      placeholder: "Nhập lý do từ chối",
+      defaultValue: "",
+      primaryVariant: "primary"
+    },
+    transfer: {
+      title: "Chuyển ký",
+      description: "Chọn một lãnh đạo liên quan để tiếp nhận quyền ký.",
+      primaryVariant: "primary"
+    }
+  };
+  const config = modalConfig[mode];
+
+  if (!config) return;
+
+  signerActionModalMode = mode;
+
+  const textField = document.getElementById("relatedSignerTextField");
+  const transferField = document.getElementById("relatedSignerTransferField");
+  const textarea = document.getElementById("relatedSignerContent");
+  const transferContent = document.getElementById(
+    "relatedSignerTransferContent"
+  );
+  const error = document.getElementById("relatedSignerActionError");
+  const primaryButton = document.getElementById("confirmRelatedSignerAction");
+
+  document.getElementById("relatedSignerActionTitle").textContent = config.title;
+  document.getElementById("relatedSignerActionDescription").textContent =
+    config.description;
+  textField.hidden = mode === "transfer";
+  transferField.hidden = mode !== "transfer";
+  textarea.value = config.defaultValue || "";
+  transferContent.value = "";
+  textarea.placeholder = config.placeholder || "";
+  document.getElementById("relatedSignerContentLabel").textContent =
+    config.label || "";
+  document
+    .querySelectorAll('input[name="relatedSignerTransferPerson"]')
+    .forEach((input) => {
+      input.checked = false;
+    });
+  error.textContent = "";
+  error.classList.remove("visible");
+  primaryButton.disabled = mode === "transfer";
+  primaryButton.className =
+    `genco-button genco-button--${config.primaryVariant}`;
+  document.getElementById("relatedSignerActionModal").classList.add("open");
+
+  setTimeout(() => {
+    if (mode === "transfer") {
+      document
+        .querySelector('input[name="relatedSignerTransferPerson"]')
+        ?.focus();
+    } else {
+      textarea.focus();
+    }
+  }, 0);
+}
+
+function confirmRelatedSignerAction() {
+  const textarea = document.getElementById("relatedSignerContent");
+  const transferContent = document
+    .getElementById("relatedSignerTransferContent")
+    .value.trim();
+  const error = document.getElementById("relatedSignerActionError");
+  const selectedRecipient = document.querySelector(
+    'input[name="relatedSignerTransferPerson"]:checked'
+  );
+  const content = textarea.value.trim();
+
+  if (signerActionModalMode === "reject" && !content) {
+    error.textContent = "Vui lòng nhập lý do từ chối.";
+    error.classList.add("visible");
+    textarea.focus();
+    return;
+  }
+
+  if (signerActionModalMode === "transfer" && !selectedRecipient) {
+    error.textContent = "Vui lòng chọn người nhận chuyển ký.";
+    error.classList.add("visible");
+    return;
+  }
+
+  const mode = signerActionModalMode;
+  const { card, role } = activeSignerRoleState();
+  closeRelatedSignerActionModal();
+
+  if (!card || !role) return;
+
+  if (mode === "approve") {
+    card.dataset[role.stateKey] = "approved";
+    card.dataset[role.decisionContentKey] = content;
+
+    updateActiveSigningStatus(
+      selectedPowerPersonFilter === "primary-signer" ? "signed" : "signing"
+    );
+    setActiveSigningInboxStatus("signed");
+    showToast("Đã đồng ý và ký văn bản.");
+    return;
+  }
+
+  if (mode === "reject") {
+    card.dataset[role.stateKey] = "rejected";
+    card.dataset[role.decisionContentKey] = content;
+    updateActiveSigningStatus("rejected");
+    setActiveSigningInboxStatus("rejected-sign");
+    showToast("Đã từ chối văn bản.");
+    return;
+  }
+
+  const recipient = selectedRecipient.value;
+
+  card.dataset[role.stateKey] = "transferred";
+  card.dataset[role.recipientKey] = recipient;
+  card.dataset[role.transferContentKey] = transferContent;
+  setActiveSigningInboxStatus("transferred");
+  renderSignApprovalTable(card.dataset.status || "waiting");
+  renderSignDetailActions(card.dataset.status || "waiting");
+  showToast(`Đã chuyển ký cho ${recipient}.`);
+}
+
+function signedFilePermissionState() {
+  const { card, role, state, recipient, prerequisitesSigned } =
+    activeSignerRoleState();
+  const documentStatus = card?.dataset.status || "draft";
+
+  if (!role) {
+    return {
+      canAct: false,
+      status: "view-only",
+      label: "Chỉ xem",
+      note: "Vai trò hiện tại không có quyền xử lý ký trên văn bản này.",
+      state,
+      recipient
+    };
+  }
+
+  if (state === "approved") {
+    return {
+      canAct: false,
+      status: "signed",
+      label: "Đã ký",
+      note: "Bạn đã hoàn thành ký văn bản này.",
+      state,
+      recipient
+    };
+  }
+
+  if (state === "rejected") {
+    return {
+      canAct: false,
+      status: "rejected",
+      label: "Từ chối ký",
+      note: "Bạn đã từ chối ký văn bản này.",
+      state,
+      recipient
+    };
+  }
+
+  if (state === "transferred") {
+    return {
+      canAct: false,
+      status: "transferred",
+      label: "Đã chuyển ký",
+      note: recipient
+        ? `Quyền ký đã được chuyển cho ${recipient}.`
+        : "Quyền ký đã được chuyển cho người xử lý khác.",
+      state,
+      recipient
+    };
+  }
+
+  if (state === "stopped") {
+    return {
+      canAct: false,
+      status: "stopped",
+      label: "Đã dừng",
+      note: "Dòng ký đã dừng do một bước song song trước đó bị từ chối.",
+      state,
+      recipient
+    };
+  }
+
+  if (["signed", "rejected", "recalled"].includes(documentStatus)) {
+    const stoppedByOtherSigner = documentStatus === "rejected";
+    return {
+      canAct: false,
+      status: stoppedByOtherSigner ? "stopped" : documentStatus,
+      label: stoppedByOtherSigner
+        ? "Đã dừng"
+        : documentStatus === "signed"
+          ? "Đã ký"
+          : "Đã thu hồi",
+      note: stoppedByOtherSigner
+        ? "Văn bản đã bị từ chối ở một bước ký khác."
+        : "Văn bản đã kết thúc xử lý và chỉ còn quyền xem.",
+      state,
+      recipient
+    };
+  }
+
+  if (state === "pending" && prerequisitesSigned) {
+    return {
+      canAct: true,
+      status: "needs-sign",
+      label: "Cần ký",
+      note: "Đã đến lượt bạn xử lý. Vui lòng kiểm tra nội dung trước khi quyết định.",
+      state,
+      recipient
+    };
+  }
+
+  return {
+    canAct: false,
+    status: "not-turn",
+    label: "Chưa đến lượt",
+    note: "Bạn có thể xem file; hành động ký sẽ mở khi các bước trước hoàn tất.",
+    state,
+    recipient
+  };
+}
+
+function renderSignedFilePermission() {
+  const permission = signedFilePermissionState();
+  const activeCard = document.querySelector(".signing-card.active");
+  const code = activeCard?.querySelector("strong")?.textContent.trim() || "--";
+  const badge = document.getElementById("signedFilePermissionBadge");
+  const note = document.getElementById("signedFilePermissionNote");
+  const transferNote = document.getElementById("signedFileTransferNote");
+  const footerHint = document.getElementById("signedFileFooterHint");
+  const approveButton = document.getElementById("signedFileApproveAction");
+  const rejectButton = document.getElementById("signedFileRejectAction");
+
+  badge.textContent = permission.label;
+  badge.className = `signed-file-permission-badge ${permission.status}`;
+  note.textContent = permission.note;
+  footerHint.textContent = permission.canAct
+    ? "Kiểm tra kỹ nội dung trước khi thực hiện ký."
+    : permission.note;
+  approveButton.hidden = !permission.canAct;
+  rejectButton.hidden = !permission.canAct;
+  document.getElementById("signedFileSigningCode").textContent = code;
+
+  transferNote.hidden = permission.status !== "transferred";
+  transferNote.textContent =
+    permission.status === "transferred" ? permission.note : "";
+}
+
+function openSignedFileModal() {
+  renderSignedFilePermission();
+  document.getElementById("signedFileModal").classList.add("open");
+}
+
+function closeSignedFileModal() {
+  document.getElementById("signedFileModal").classList.remove("open");
+}
+
+function openSignedFileDecision(mode) {
+  const permission = signedFilePermissionState();
+
+  if (!permission.canAct) {
+    renderSignedFilePermission();
+    showToast("Bạn không có quyền xử lý ký ở trạng thái hiện tại.", "error");
+    return;
+  }
+
+  closeSignedFileModal();
+  openRelatedSignerActionModal(mode);
+}
+
 function openSignContentModal(index) {
   const content = signApprovalPeople[index]?.content;
 
@@ -2586,8 +3581,71 @@ document
   .getElementById("dismissSignContentModal")
   .addEventListener("click", closeSignContentModal);
 
+document
+  .getElementById("closeRelatedSignerActionModal")
+  .addEventListener("click", closeRelatedSignerActionModal);
+
+document
+  .getElementById("dismissRelatedSignerAction")
+  .addEventListener("click", closeRelatedSignerActionModal);
+
+document
+  .getElementById("confirmRelatedSignerAction")
+  .addEventListener("click", confirmRelatedSignerAction);
+
+document
+  .querySelectorAll('input[name="relatedSignerTransferPerson"]')
+  .forEach((input) => {
+    input.addEventListener("change", () => {
+      document.getElementById("confirmRelatedSignerAction").disabled = false;
+      document
+        .getElementById("relatedSignerActionError")
+        .classList.remove("visible");
+    });
+  });
+
+document
+  .getElementById("relatedSignerContent")
+  .addEventListener("input", () => {
+    document
+      .getElementById("relatedSignerActionError")
+      .classList.remove("visible");
+  });
+
+document
+  .getElementById("closeSignedFileModal")
+  .addEventListener("click", closeSignedFileModal);
+
+document
+  .getElementById("dismissSignedFileModal")
+  .addEventListener("click", closeSignedFileModal);
+
+document
+  .getElementById("signedFileRejectAction")
+  .addEventListener("click", () => openSignedFileDecision("reject"));
+
+document
+  .getElementById("signedFileApproveAction")
+  .addEventListener("click", () => openSignedFileDecision("approve"));
+
 signDetailActions?.addEventListener("click", (event) => {
   event.stopPropagation();
+
+  const relatedSignerAction = event.target.closest(
+    "[data-related-signer-action]"
+  );
+
+  if (relatedSignerAction) {
+    const action = relatedSignerAction.dataset.relatedSignerAction;
+
+    if (action === "view-signed-file") {
+      openSignedFileModal();
+    } else {
+      openRelatedSignerActionModal(action);
+    }
+
+    return;
+  }
 
   const menuToggle = event.target.closest("[data-sign-menu-toggle]");
 
@@ -2721,9 +3779,7 @@ signingInboxTable?.addEventListener("click", (event) => {
 
   if (!task || !signingInboxTable.contains(task)) return;
 
-  const targetCard = document.querySelector(
-    `.signing-card[data-status="${task.dataset.status}"]`
-  );
+  const targetCard = findSigningCardByCode(task.dataset.signingCode);
 
   if (targetCard) {
     document
@@ -2731,14 +3787,56 @@ signingInboxTable?.addEventListener("click", (event) => {
       .forEach((card) => card.classList.remove("active"));
 
     targetCard.classList.add("active");
-    targetCard.querySelector("strong").textContent =
-      task.querySelector("strong").textContent.trim();
-    targetCard.querySelector("span").textContent = task
-      .querySelector(".signing-inbox-title")
-      .childNodes[0].textContent.trim();
-  }
+    targetCard.dataset.departmentSignerState =
+      task.dataset.departmentSignerState;
+    targetCard.dataset.leaderSignerState = task.dataset.leaderSignerState;
+    targetCard.dataset.primarySignerState = task.dataset.primarySignerState;
+    targetCard.dataset.signingFlowInitialized = "true";
 
-  showSignDetailScreen("signing");
+    const groupStates = [
+      task.dataset.departmentSignerState,
+      task.dataset.leaderSignerState,
+      task.dataset.primarySignerState
+    ];
+    const documentStatusByTicketStatus = {
+      signed: "signed",
+      "rejected-sign": "rejected",
+      transferred: "signing",
+      stopped: "rejected",
+      "needs-sign": "waiting",
+      "not-turn": "waiting"
+    };
+    const overallStatus =
+      documentStatusByTicketStatus[task.dataset.status] ||
+      (groupStates.every((state) => state === "approved")
+        ? "signed"
+        : groupStates.some((state) => state === "approved")
+          ? "signing"
+          : "waiting");
+    targetCard.dataset.status = overallStatus;
+    targetCard.querySelector(".signing-card-summary").textContent = task
+      .querySelector(".signing-inbox-title")
+      .textContent.trim();
+    applySigningCardPresentation(targetCard, overallStatus);
+
+    syncSignSummaryFromActiveCard();
+    renderSignDetailFiles();
+    syncSigningInboxForRole();
+
+    const detailScroll = document.querySelector(
+      "#signingInboxDetailHost .sign-detail-scroll"
+    );
+
+    if (detailScroll) {
+      detailScroll.scrollTop = 0;
+    }
+
+    if (window.innerWidth <= 640) {
+      document
+        .getElementById("signingInboxDetailHost")
+        .scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+  }
 });
 
 signingCardRow?.addEventListener("click", (event) => {

@@ -36,6 +36,274 @@
   --shadow: 0 18px 50px rgba(15, 23, 42, 0.16);
 }
 
+/* Signed document viewer workspace */
+.modal.signed-file-modal {
+  width: min(1180px, calc(100vw - 32px));
+  height: min(860px, calc(100vh - 32px));
+  max-height: none;
+  border-radius: 8px;
+}
+
+.signed-file-modal .signed-file-modal-body {
+  min-height: 0;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 286px;
+  padding: 0;
+  overflow: hidden;
+  background: #eef2f7;
+}
+
+.signed-file-viewer {
+  min-width: 0;
+  min-height: 0;
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr);
+}
+
+.signed-file-viewer .signed-file-toolbar {
+  margin: 0;
+  border: 0;
+  border-bottom: 1px solid #dbe4ef;
+  border-radius: 0;
+}
+
+.signed-file-document-scroll {
+  min-height: 0;
+  overflow: auto;
+  padding: 22px;
+}
+
+.signed-file-document-scroll .signed-document-preview {
+  width: min(680px, 100%);
+  min-height: 620px;
+}
+
+.signed-file-context {
+  min-width: 0;
+  overflow: auto;
+  border-left: 1px solid #dbe4ef;
+  background: #fff;
+}
+
+.signed-file-context-section {
+  display: grid;
+  gap: 9px;
+  align-content: start;
+  padding: 18px;
+  border-bottom: 1px solid #e7edf5;
+}
+
+.signed-file-context-label {
+  color: #64748b;
+  font-size: 11px;
+  font-weight: 500;
+  text-transform: uppercase;
+}
+
+.signed-file-permission-badge {
+  width: fit-content;
+  padding: 5px 10px;
+  border-radius: 999px;
+  color: #475569;
+  background: #f1f5f9;
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.signed-file-permission-badge.needs-sign {
+  color: #1d4ed8;
+  background: #dbeafe;
+}
+
+.signed-file-permission-badge.signed {
+  color: #15803d;
+  background: #dcfce7;
+}
+
+.signed-file-permission-badge.rejected {
+  color: #b91c1c;
+  background: #fee2e2;
+}
+
+.signed-file-permission-badge.transferred {
+  color: #6d28d9;
+  background: #ede9fe;
+}
+
+.signed-file-permission-badge.stopped,
+.signed-file-permission-badge.not-turn,
+.signed-file-permission-badge.view-only {
+  color: #64748b;
+  background: #e2e8f0;
+}
+
+#signedFilePermissionNote {
+  margin: 0;
+  color: #64748b;
+  font-size: 12px;
+  line-height: 1.55;
+}
+
+.signed-file-metadata h3 {
+  margin: 0;
+  color: #1e293b;
+  font-size: 13px;
+}
+
+.signed-file-metadata dl {
+  display: grid;
+  gap: 0;
+  margin: 0;
+}
+
+.signed-file-metadata dl > div {
+  display: grid;
+  gap: 3px;
+  padding: 10px 0;
+  border-bottom: 1px solid #eef2f7;
+}
+
+.signed-file-metadata dl > div:last-child {
+  border-bottom: 0;
+}
+
+.signed-file-metadata dt {
+  color: #94a3b8;
+  font-size: 10.5px;
+}
+
+.signed-file-metadata dd {
+  margin: 0;
+  overflow: hidden;
+  color: #334155;
+  font-size: 12px;
+  font-weight: 500;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.signed-file-context .signed-file-transfer-note {
+  margin: 14px 18px;
+}
+
+.signed-file-modal .signed-file-footer {
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+}
+
+.signed-file-footer > p {
+  margin: 0;
+  color: #64748b;
+  font-size: 12px;
+}
+
+.signed-file-footer-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+.signed-file-footer-actions [hidden] {
+  display: none !important;
+}
+
+.signed-file-reject-action {
+  border-color: #fecaca;
+  color: #b91c1c;
+  background: #fff;
+}
+
+.signed-file-reject-action:hover:not(:disabled) {
+  border-color: #ef4444;
+  background: #fef2f2;
+}
+
+.signed-file-footer-actions .material-symbols-outlined {
+  font-size: 18px;
+}
+
+@media (max-width: 900px) {
+  .signed-file-modal .signed-file-modal-body {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: minmax(360px, 1fr) auto;
+  }
+
+  .signed-file-context {
+    max-height: 240px;
+    display: grid;
+    grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
+    border-top: 1px solid #dbe4ef;
+    border-left: 0;
+  }
+
+  .signed-file-context-section {
+    border-right: 1px solid #e7edf5;
+    border-bottom: 0;
+  }
+
+  .signed-file-context .signed-file-transfer-note {
+    grid-column: 1 / -1;
+  }
+}
+
+@media (max-width: 640px) {
+  .modal.signed-file-modal {
+    width: 100%;
+    height: 100%;
+    border-radius: 0;
+  }
+
+  .signed-file-modal .modal-header {
+    padding: 14px 16px;
+  }
+
+  .signed-file-modal .signed-file-modal-body {
+    grid-template-rows: minmax(0, 1fr) auto;
+  }
+
+  .signed-file-document-scroll {
+    padding: 12px;
+  }
+
+  .signed-file-document-scroll .signed-document-preview {
+    min-height: 0;
+  }
+
+  .signed-file-context {
+    max-height: 210px;
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .signed-file-context-section {
+    padding: 13px 16px;
+    border-right: 0;
+    border-bottom: 1px solid #e7edf5;
+  }
+
+  .signed-file-metadata {
+    display: none;
+  }
+
+  .signed-file-modal .signed-file-footer {
+    padding: 12px 14px;
+  }
+
+  .signed-file-footer > p {
+    display: none;
+  }
+
+  .signed-file-footer-actions {
+    width: 100%;
+  }
+
+  .signed-file-footer-actions .genco-button {
+    flex: 1;
+    padding: 0 12px;
+  }
+}
+
 * {
   box-sizing: border-box;
 }
@@ -66,6 +334,7 @@ button:disabled {
 
 .app-layout {
   min-height: 100vh;
+  padding-top: 48px;
 }
 
 .app-layout > .sidebar {
@@ -75,13 +344,13 @@ button:disabled {
 .app-create-left-menu {
   position: fixed;
   z-index: 50;
-  inset: 0 auto 0 0;
+  inset: 48px auto 0 0;
   width: 270px;
-  height: 100vh;
+  height: calc(100vh - 48px);
 }
 
 .app-content {
-  min-height: 100vh;
+  min-height: calc(100vh - 48px);
   margin-left: 270px;
   transition: margin-left 0.2s ease;
 }
@@ -225,7 +494,7 @@ button:disabled {
 .app-header {
   position: sticky;
   z-index: 30;
-  top: 0;
+  top: 48px;
   height: 64px;
   display: flex;
   align-items: center;
@@ -1138,18 +1407,19 @@ select:focus {
   min-height: 100vh;
   display: grid;
   grid-template-columns: 270px minmax(0, 1fr);
+  padding-top: 48px;
   background: var(--page-bg);
 }
 
 .sign-create-left-menu {
   position: sticky;
-  top: 0;
-  height: 100vh;
+  top: 48px;
+  height: calc(100vh - 48px);
 }
 
 .sign-create-content {
   min-width: 0;
-  min-height: 100vh;
+  min-height: calc(100vh - 48px);
   padding-bottom: 96px;
   background: var(--page-bg);
 }
@@ -1157,7 +1427,7 @@ select:focus {
 .sign-create-header {
   position: sticky;
   z-index: 30;
-  top: 0;
+  top: 48px;
   display: flex;
   align-items: center;
   gap: 16px;
@@ -1560,33 +1830,48 @@ select:focus {
 
 .workflow-shell {
   min-height: 100vh;
+  padding-top: 48px;
   color: var(--text);
   background: #eef3f8;
   font-family: Inter, Roboto, Arial, system-ui, sans-serif;
 }
 
 .workflow-topbar {
+  position: fixed;
+  z-index: 120;
+  top: 0;
+  right: 0;
+  left: 0;
   height: 48px;
-  display: flex;
+  display: grid;
+  grid-template-columns: minmax(300px, 1fr) auto minmax(300px, 1fr);
   align-items: center;
-  justify-content: space-between;
   padding: 0 10px 0 18px;
   color: #fff;
-  background:
-    linear-gradient(90deg, rgba(34, 45, 31, 0.66), rgba(68, 87, 45, 0.62)),
-    linear-gradient(110deg, #8c5c29, #bca35c 18%, #6e8c4d 36%, #9b4c39 56%, #394d2e 78%);
+  background: #075a9c;
 }
 
 .topbar-left,
 .topbar-actions {
   display: flex;
   align-items: center;
-  gap: 16px;
+  gap: 14px;
+}
+
+.topbar-left {
+  min-width: 0;
+}
+
+.topbar-actions {
+  justify-self: end;
 }
 
 .topbar-product,
 .topbar-title {
+  overflow: hidden;
   font-weight: 600;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .topbar-divider {
@@ -1600,6 +1885,48 @@ select:focus {
   opacity: 0.9;
 }
 
+.power-app-launcher {
+  font-size: 20px;
+}
+
+.power-app-header-center {
+  justify-self: center;
+}
+
+.power-person-select {
+  height: 32px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding-left: 9px;
+  border: 1px solid rgba(255, 255, 255, 0.42);
+  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.12);
+}
+
+.power-person-select > .material-symbols-outlined {
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 17px;
+}
+
+.power-person-select select {
+  width: 270px;
+  height: 30px;
+  padding: 0 30px 0 2px;
+  border: 0;
+  border-radius: 0 3px 3px 0;
+  color: #fff;
+  background-color: transparent;
+  font-size: 12.5px;
+  font-weight: 600;
+  outline: 0;
+}
+
+.power-person-select select option {
+  color: #1e293b;
+  background: #fff;
+}
+
 .topbar-share {
   height: 30px;
   display: inline-flex;
@@ -1611,6 +1938,27 @@ select:focus {
   color: #1f2937;
   background: rgba(255, 255, 255, 0.92);
   font-weight: 600;
+}
+
+.power-header-action {
+  width: 30px;
+  height: 30px;
+  display: grid;
+  place-items: center;
+  padding: 0;
+  border: 1px solid transparent;
+  border-radius: 4px;
+  color: #fff;
+  background: transparent;
+}
+
+.power-header-action:hover {
+  border-color: rgba(255, 255, 255, 0.3);
+  background: rgba(255, 255, 255, 0.12);
+}
+
+.power-header-action .material-symbols-outlined {
+  font-size: 19px;
 }
 
 .workflow-avatar {
@@ -2211,6 +2559,15 @@ select:focus {
   display: none;
 }
 
+#signingInboxView.workflow-detail-expanded .signing-inbox-layout {
+  grid-template-columns: minmax(0, 1fr);
+}
+
+#signingInboxView.workflow-detail-expanded .workflow-menu,
+#signingInboxView.workflow-detail-expanded .signing-inbox-panel {
+  display: none;
+}
+
 .workflow-steps {
   position: relative;
   display: grid;
@@ -2776,14 +3133,43 @@ select:focus {
 .signing-inbox-layout {
   height: calc(100vh - 48px);
   display: grid;
-  grid-template-columns: 270px minmax(0, 1fr);
+  grid-template-columns: 270px 390px minmax(0, 1fr);
   overflow: hidden;
 }
 
 .signing-inbox-panel {
   overflow: auto;
-  padding: 28px;
+  padding: 20px 16px;
+  border-right: 1px solid #dbe4f0;
   background: #f4f7fb;
+}
+
+.signing-inbox-detail-host {
+  position: relative;
+  min-width: 0;
+  overflow: hidden;
+  background: #f4f7fb;
+}
+
+.signing-inbox-detail-host .sign-detail-panel {
+  height: 100%;
+}
+
+.signing-inbox-detail-host .signing-list-card {
+  display: none;
+}
+
+.signing-inbox-detail-host .sign-process-card,
+.signing-inbox-detail-host [data-toggle-progress] {
+  display: none;
+}
+
+.signing-related-draft-button {
+  white-space: nowrap;
+}
+
+.signing-inbox-panel .signing-inbox-table {
+  grid-template-columns: minmax(0, 1fr);
 }
 
 .signing-inbox-header {
@@ -2802,7 +3188,7 @@ select:focus {
 }
 
 .signing-inbox-header h1 {
-  margin: 6px 0 4px;
+  margin: 0;
   color: #1e293b;
   font-size: 24px;
   line-height: 1.3;
@@ -2825,92 +3211,135 @@ select:focus {
 }
 
 .signing-inbox-filters {
+  flex-wrap: wrap;
   margin-bottom: 12px;
+  overflow-x: visible;
 }
 
 .signing-inbox-table {
-  overflow: auto;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(250px, 1fr));
+  gap: 14px;
+}
+
+.signing-inbox-card {
+  min-width: 0;
+  min-height: 176px;
+  display: flex;
+  flex-direction: column;
+  padding: 14px 16px;
   border: 1px solid #dbe4f0;
   border-radius: 8px;
-  background: #fff;
-}
-
-.signing-inbox-table-head,
-.signing-inbox-row {
-  min-width: 980px;
-  display: grid;
-  grid-template-columns: 130px minmax(300px, 1fr) 150px 130px 100px 28px;
-  gap: 18px;
-  align-items: center;
-}
-
-.signing-inbox-table-head {
-  min-height: 42px;
-  padding: 0 18px;
-  border-bottom: 1px solid #e7edf5;
-  color: #94a3b8;
-  background: #f8fafc;
-  font-size: 11.5px;
-  font-weight: 700;
-  text-transform: uppercase;
-}
-
-.signing-inbox-row {
-  width: 100%;
-  min-height: 64px;
-  padding: 0 18px;
-  border: 0;
-  border-bottom: 1px solid #e7edf5;
   color: #475569;
   background: #fff;
-  font-size: 12.5px;
   text-align: left;
+  transition: border-color 0.16s ease, box-shadow 0.16s ease,
+    transform 0.16s ease;
 }
 
-.signing-inbox-row:last-child {
-  border-bottom: 0;
+.signing-inbox-card:hover {
+  border-color: #93c5fd;
+  box-shadow: 0 10px 24px rgba(37, 99, 235, 0.09);
+  transform: translateY(-1px);
 }
 
-.signing-inbox-row:hover {
-  background: #fffbeb;
+.signing-inbox-card.active {
+  border-color: #60a5fa;
+  background: #eff6ff;
+  box-shadow: inset 3px 0 0 #2563eb;
 }
 
-.signing-inbox-row[hidden] {
+.signing-inbox-card:focus-visible {
+  outline: 3px solid rgba(37, 99, 235, 0.22);
+  outline-offset: 2px;
+}
+
+.signing-inbox-card[hidden] {
   display: none;
 }
 
-.signing-inbox-row strong {
-  color: #475569;
+.signing-inbox-card-topline {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 12px;
+}
+
+.signing-inbox-card-topline small {
+  color: #2563eb;
+  font-size: 11px;
   font-weight: 500;
 }
 
-.signing-inbox-title {
+.signing-inbox-card .signing-inbox-title {
   min-width: 0;
+  min-height: 44px;
+  display: -webkit-box;
+  margin-top: 8px;
   overflow: hidden;
-  display: grid;
-  gap: 4px;
   color: #1e293b;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.55;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+}
+
+.signing-inbox-card-fields {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 14px;
+  margin-top: 10px;
+  padding: 10px 0;
+  border-top: 1px solid #eef2f7;
+  border-bottom: 1px solid #eef2f7;
+}
+
+.signing-inbox-card-fields > span {
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.signing-inbox-card-fields .material-symbols-outlined {
+  flex: 0 0 auto;
+  color: #94a3b8;
+  font-size: 15px;
+}
+
+.signing-inbox-card-fields b {
+  overflow: hidden;
+  color: #475569;
+  font-size: 12px;
+  font-weight: 500;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 
-.signing-inbox-title small {
-  color: #94a3b8;
-  font-size: 11px;
+.signing-inbox-card-status {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 24px;
+  gap: 10px;
+  align-items: center;
+  margin-top: auto;
+  padding-top: 10px;
 }
 
-.signing-inbox-row em {
+.signing-inbox-card-status em {
+  justify-self: start;
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  color: #2563eb;
+  padding: 3px 8px;
+  border-radius: 999px;
   font-style: normal;
-  font-size: 11.5px;
+  font-size: 11px;
   font-weight: 500;
   white-space: nowrap;
 }
 
-.signing-inbox-row em::before {
+.signing-inbox-card-status em::before {
   width: 6px;
   height: 6px;
   flex: 0 0 auto;
@@ -2919,13 +3348,41 @@ select:focus {
   content: "";
 }
 
-.signing-inbox-row em.signing {
-  color: #7c3aed;
+.signing-inbox-card-status em.waiting,
+.signing-inbox-card-status em.not-turn {
+  color: #64748b;
+  background: #f1f5f9;
 }
 
-.signing-inbox-row > .material-symbols-outlined {
+.signing-inbox-card-status em.needs-sign {
+  color: #1d4ed8;
+  background: #dbeafe;
+}
+
+.signing-inbox-card-status em.signed {
+  color: #15803d;
+  background: #dcfce7;
+}
+
+.signing-inbox-card-status em.rejected-sign {
+  color: #b91c1c;
+  background: #fee2e2;
+}
+
+.signing-inbox-card-status em.transferred {
+  color: #6d28d9;
+  background: #ede9fe;
+}
+
+.signing-inbox-card-status em.stopped {
+  color: #64748b;
+  background: #e2e8f0;
+  text-decoration: line-through;
+}
+
+.signing-inbox-card-status > .material-symbols-outlined {
   color: #94a3b8;
-  font-size: 20px;
+  font-size: 18px;
 }
 
 .sign-detail-layout {
@@ -3049,14 +3506,37 @@ select:focus {
   background: #fff;
 }
 
+.signing-card-columns,
+.signing-card {
+  display: grid;
+  grid-template-columns: 120px minmax(250px, 1fr) 100px 92px 96px;
+  gap: 14px;
+  align-items: center;
+  min-width: 790px;
+}
+
+.signing-card-columns {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  min-height: 36px;
+  padding: 0 18px;
+  border-bottom: 1px solid #dbe4f0;
+  color: #94a3b8;
+  background: #f8fafc;
+}
+
+.signing-card-columns span {
+  overflow: hidden;
+  font-size: 11px;
+  font-weight: 500;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
 .signing-card {
   position: relative;
-  min-width: 720px;
   min-height: 49px;
-  display: grid;
-  grid-template-columns: 120px minmax(280px, 1fr) 112px 96px;
-  gap: 18px;
-  align-items: center;
   width: 100%;
   padding: 0 18px;
   border: 0;
@@ -3111,7 +3591,7 @@ select:focus {
 }
 
 .signing-card small {
-  grid-column: 4;
+  grid-column: 5;
   grid-row: 1;
   color: #94a3b8;
   font-size: 12px;
@@ -3140,6 +3620,38 @@ select:focus {
   border-radius: 50%;
   background: currentColor;
   content: "";
+}
+
+.signing-card .signing-card-label {
+  grid-column: 4;
+  grid-row: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-self: start;
+  width: fit-content;
+  min-height: 22px;
+  padding: 2px 8px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 500;
+  line-height: 1;
+}
+
+.signing-card .signing-card-label.returned {
+  color: #b91c1c;
+  background: #fef2f2;
+}
+
+.signing-card .signing-card-label.recalled {
+  color: #475569;
+  background: #f1f5f9;
+}
+
+.signing-card .signing-card-label.is-empty {
+  min-height: 0;
+  padding: 0;
+  color: #94a3b8;
+  background: transparent;
 }
 
 .signing-card em.blue {
@@ -3512,8 +4024,271 @@ select:focus {
   grid-template-columns: 58px minmax(220px, 1fr);
 }
 
+.sign-approval-table.signing-timeline {
+  position: relative;
+  display: grid;
+  gap: 12px;
+  padding: 18px 24px 28px;
+}
+
+.signing-timeline-step {
+  position: relative;
+  display: grid;
+  grid-template-columns: 36px minmax(0, 1fr);
+  gap: 14px;
+  align-items: start;
+}
+
+.signing-timeline-step::before {
+  position: absolute;
+  top: -12px;
+  bottom: -12px;
+  left: 17px;
+  width: 2px;
+  background: #dbe4f0;
+  content: "";
+}
+
+.signing-timeline-step:first-child::before {
+  top: 18px;
+}
+
+.signing-timeline-step:last-child::before {
+  bottom: calc(100% - 18px);
+}
+
+.signing-timeline-step.done::before {
+  background: #86efac;
+}
+
+.signing-timeline-marker {
+  position: relative;
+  z-index: 1;
+  width: 36px;
+  height: 36px;
+  display: grid;
+  place-items: center;
+  border: 2px solid #cbd5e1;
+  border-radius: 50%;
+  color: #64748b;
+  background: #f8fafc;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.signing-timeline-step.done .signing-timeline-marker {
+  border-color: #22c55e;
+  color: #047857;
+  background: #dcfce7;
+}
+
+.signing-timeline-step.current .signing-timeline-marker {
+  border-color: #2563eb;
+  color: #fff;
+  background: #2563eb;
+  box-shadow: 0 0 0 4px #dbeafe;
+}
+
+.signing-timeline-step.stopped .signing-timeline-marker {
+  border-style: dashed;
+  color: #94a3b8;
+  background: #f1f5f9;
+}
+
+.signing-timeline-card {
+  min-width: 0;
+  overflow: hidden;
+  border: 1px solid #dbe4f0;
+  border-radius: 8px;
+  background: #fff;
+}
+
+.signing-timeline-step.current .signing-timeline-card {
+  border-color: #93c5fd;
+  background: #f8fbff;
+  box-shadow: 0 0 0 1px #dbeafe;
+}
+
+.signing-timeline-card h3 {
+  margin: 0;
+  padding: 12px 16px;
+  color: #1e293b;
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 1.4;
+}
+
+.signing-timeline-step.current .signing-timeline-card h3 {
+  color: #1d4ed8;
+}
+
+.signing-timeline-people {
+  border-top: 1px solid #e7edf5;
+}
+
+.signing-timeline-group {
+  padding: 9px 16px 6px;
+  border-top: 1px solid #eef2f7;
+  color: #475569;
+  background: #f8fafc;
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.signing-timeline-group:first-child {
+  border-top: 0;
+}
+
+.signing-timeline-person {
+  min-width: 0;
+  display: grid;
+  grid-template-columns: minmax(180px, 0.85fr) minmax(220px, 1.15fr) auto;
+  gap: 14px;
+  align-items: center;
+  min-height: 48px;
+  padding: 8px 16px;
+}
+
+.signing-timeline-person + .signing-timeline-person {
+  border-top: 1px solid #eef2f7;
+}
+
+.signing-timeline-person-name {
+  min-width: 0;
+  display: grid;
+  gap: 3px;
+}
+
+.signing-timeline-person-name strong {
+  overflow: hidden;
+  color: #334155;
+  font-size: 12.5px;
+  font-weight: 600;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.signing-timeline-person > span {
+  min-width: 0;
+  overflow: hidden;
+  color: #64748b;
+  font-size: 12px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.signing-timeline-transfer {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  color: #7c3aed;
+  font-size: 10.5px;
+  font-weight: 400;
+}
+
+.signing-timeline-transfer .material-symbols-outlined {
+  font-size: 14px;
+}
+
+.signing-timeline-person-action {
+  display: inline-flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 5px;
+}
+
+.signing-timeline-person-action em {
+  min-width: 72px;
+  padding: 4px 9px;
+  border-radius: 999px;
+  color: #475569;
+  background: #f1f5f9;
+  font-size: 10.5px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 1.2;
+  text-align: center;
+  white-space: nowrap;
+}
+
+.signing-timeline-person-action em.green {
+  color: #15803d;
+  background: #dcfce7;
+}
+
+.signing-timeline-person-action em.blue {
+  color: #1d4ed8;
+  background: #dbeafe;
+}
+
+.signing-timeline-person-action em.red {
+  color: #b91c1c;
+  background: #fee2e2;
+}
+
+.signing-timeline-person-action em.violet {
+  color: #6d28d9;
+  background: #ede9fe;
+}
+
+.signing-timeline-person-action em.stopped {
+  color: #64748b;
+  background: #e2e8f0;
+  text-decoration: line-through;
+}
+
+@media (max-width: 800px) {
+  .signing-timeline-person {
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 4px 10px;
+  }
+
+  .signing-timeline-person > span {
+    grid-column: 1;
+  }
+
+  .signing-timeline-person-action {
+    grid-column: 2;
+    grid-row: 1 / span 2;
+  }
+}
+
+@media (max-width: 520px) {
+  .sign-approval-table.signing-timeline {
+    padding: 16px 12px 22px;
+  }
+
+  .signing-timeline-step {
+    grid-template-columns: 30px minmax(0, 1fr);
+    gap: 10px;
+  }
+
+  .signing-timeline-step::before {
+    left: 14px;
+  }
+
+  .signing-timeline-marker {
+    width: 30px;
+    height: 30px;
+  }
+
+  .signing-timeline-person {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .signing-timeline-person-action {
+    grid-column: 1;
+    grid-row: auto;
+    justify-content: flex-start;
+  }
+}
+
 .sign-detail-actions {
   flex-wrap: wrap;
+}
+
+.sign-detail-actions.is-empty {
+  display: none;
 }
 
 .sign-execute {
@@ -3590,9 +4365,268 @@ select:focus {
   background: #fef2f2;
 }
 
+.related-signer-field label,
+.related-signer-transfer-content label,
+.related-signer-transfer legend {
+  display: block;
+  margin-bottom: 8px;
+  color: #334155;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.related-signer-field textarea,
+.related-signer-transfer-content textarea {
+  width: 100%;
+  min-height: 112px;
+  resize: vertical;
+  padding: 11px 12px;
+  border: 1px solid var(--border-strong);
+  border-radius: 6px;
+  color: var(--text);
+  background: #fff;
+  line-height: 1.5;
+  outline: 0;
+}
+
+.related-signer-field textarea:focus,
+.related-signer-transfer-content textarea:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+}
+
+.related-signer-transfer {
+  display: grid;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.related-signer-transfer[hidden],
+.related-signer-field[hidden],
+.signed-file-transfer-note[hidden] {
+  display: none !important;
+}
+
+.related-signer-transfer legend span {
+  color: var(--danger);
+}
+
+.transfer-person-option {
+  display: grid;
+  grid-template-columns: 18px 34px minmax(0, 1fr);
+  gap: 10px;
+  align-items: center;
+  padding: 10px 12px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: #fff;
+  cursor: pointer;
+}
+
+.transfer-person-option:hover {
+  border-color: #93c5fd;
+  background: #f8fbff;
+}
+
+.transfer-person-option:has(input:checked) {
+  border-color: var(--primary);
+  background: #eff6ff;
+}
+
+.transfer-person-option input {
+  width: 16px;
+  height: 16px;
+  margin: 0;
+  accent-color: var(--primary);
+}
+
+.transfer-person-avatar {
+  width: 34px;
+  height: 34px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  color: #1d4ed8;
+  background: #dbeafe;
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.transfer-person-option strong,
+.transfer-person-option small {
+  display: block;
+}
+
+.transfer-person-option strong {
+  color: #1e293b;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.transfer-person-option small {
+  margin-top: 2px;
+  color: var(--text-muted);
+  font-size: 11px;
+}
+
+.related-signer-transfer-content {
+  margin-top: 6px;
+}
+
+.related-signer-transfer-content textarea {
+  min-height: 84px;
+}
+
+.related-signer-action-modal .modal-error {
+  margin: 12px 0 0;
+}
+
+.signed-file-toolbar {
+  display: grid;
+  grid-template-columns: 38px minmax(0, 1fr) auto;
+  gap: 10px;
+  align-items: center;
+  margin-bottom: 14px;
+  padding: 10px 12px;
+  border: 1px solid #dbe4ef;
+  border-radius: 6px;
+  background: #fff;
+}
+
+.signed-file-toolbar > .material-symbols-outlined {
+  width: 38px;
+  height: 38px;
+  display: grid;
+  place-items: center;
+  border-radius: 6px;
+  color: #2563eb;
+  background: #eff6ff;
+}
+
+.signed-file-toolbar strong,
+.signed-file-toolbar small {
+  display: block;
+}
+
+.signed-file-toolbar strong {
+  overflow: hidden;
+  color: #1e293b;
+  font-size: 13px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.signed-file-toolbar small {
+  margin-top: 2px;
+  color: var(--text-muted);
+  font-size: 11px;
+}
+
+.signed-file-verified {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  color: #15803d;
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.signed-file-verified .material-symbols-outlined {
+  font-size: 17px;
+}
+
+.signed-document-preview {
+  width: min(610px, 100%);
+  min-height: 430px;
+  margin: 0 auto;
+  padding: 34px 42px;
+  border: 1px solid #dbe4ef;
+  background: #fff;
+  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.08);
+}
+
+.signed-document-heading {
+  display: grid;
+  grid-template-columns: 1fr 1.35fr;
+  gap: 28px;
+  color: #1e293b;
+  text-align: center;
+  font-size: 11px;
+  line-height: 1.5;
+}
+
+.signed-document-preview h3 {
+  max-width: 410px;
+  margin: 36px auto 30px;
+  color: #0f172a;
+  text-align: center;
+  font-size: 16px;
+  line-height: 1.5;
+}
+
+.signed-document-preview p {
+  margin: 0 0 16px;
+  color: #334155;
+  font-size: 12px;
+  line-height: 1.75;
+  text-align: justify;
+}
+
+.signed-document-signature {
+  width: 230px;
+  display: grid;
+  justify-items: center;
+  margin: 28px 0 0 auto;
+  color: #1e293b;
+  text-align: center;
+}
+
+.signed-document-signature small {
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.signature-script {
+  margin: 9px 0 4px;
+  color: #1d4ed8;
+  font-family: cursive;
+  font-size: 25px;
+  transform: rotate(-4deg);
+}
+
+.signed-document-signature strong {
+  font-size: 12px;
+}
+
+.signed-document-signature em {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  margin-top: 9px;
+  color: #15803d;
+  font-size: 10px;
+  font-style: normal;
+}
+
+.signed-document-signature em .material-symbols-outlined {
+  font-size: 15px;
+}
+
+.signed-file-transfer-note {
+  margin: 12px auto 0;
+  padding: 9px 12px;
+  border: 1px solid #bfdbfe;
+  border-radius: 6px;
+  color: #1d4ed8;
+  background: #eff6ff;
+  font-size: 12px;
+}
+
 .modal-backdrop {
   position: fixed;
-  z-index: 100;
+  z-index: 180;
   inset: 0;
   display: none;
   align-items: center;
@@ -3862,10 +4896,40 @@ select:focus {
   border-left-color: var(--danger);
 }
 
+@media (max-width: 1100px) {
+  .workflow-topbar {
+    grid-template-columns: minmax(220px, 1fr) auto minmax(220px, 1fr);
+  }
+
+  .topbar-actions {
+    gap: 8px;
+  }
+
+  #signingInboxView .signing-inbox-layout {
+    grid-template-columns: 340px minmax(0, 1fr);
+  }
+
+  #signingInboxView .workflow-menu {
+    display: none;
+  }
+}
+
 @media (max-width: 900px) {
-  #signingInboxView .signing-inbox-layout,
+  .workflow-topbar {
+    grid-template-columns: minmax(160px, 1fr) auto minmax(160px, 1fr);
+  }
+
+  [data-power-app-header] .topbar-title,
+  [data-power-app-header] .topbar-info {
+    display: none;
+  }
+
   #signDetailView .sign-detail-layout {
     grid-template-columns: minmax(0, 1fr);
+  }
+
+  #signingInboxView .signing-inbox-layout {
+    grid-template-columns: 330px minmax(0, 1fr);
   }
 
   #signingInboxView .workflow-menu,
@@ -3873,23 +4937,18 @@ select:focus {
     display: none;
   }
 
-  #signingInboxView .topbar-title,
-  #signingInboxView .topbar-info,
-  #signDetailView .topbar-title,
-  #signDetailView .topbar-info {
-    display: none;
-  }
-
   .signing-inbox-panel {
     padding: 22px 16px;
   }
 
-  #signDetailView .draft-detail-header {
+  #signDetailView .draft-detail-header,
+  #signingInboxView .draft-detail-header {
     padding-right: 16px;
     padding-left: 16px;
   }
 
-  #signDetailView .workflow-overview > .detail-tabs {
+  #signDetailView .workflow-overview > .detail-tabs,
+  #signingInboxView .workflow-overview > .detail-tabs {
     margin-right: 16px;
   }
 
@@ -3900,6 +4959,10 @@ select:focus {
 }
 
 @media (max-width: 760px) {
+  .signing-inbox-table {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
   .sidebar {
     width: var(--sidebar-width);
     transform: translateX(0);
@@ -4008,6 +5071,91 @@ select:focus {
 }
 
 @media (max-width: 640px) {
+  .signing-inbox-table {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .workflow-topbar {
+    grid-template-columns: auto minmax(126px, 1fr) auto;
+    gap: 8px;
+    padding: 0 8px 0 12px;
+  }
+
+  .topbar-left {
+    gap: 8px;
+  }
+
+  [data-power-app-header] .topbar-divider,
+  [data-power-app-header] .topbar-share,
+  [data-power-app-header] .power-header-action {
+    display: none;
+  }
+
+  .power-person-select {
+    justify-self: center;
+    padding-left: 6px;
+  }
+
+  .power-person-select select {
+    width: 126px;
+    padding-right: 22px;
+  }
+
+  .topbar-actions {
+    gap: 0;
+  }
+
+  #signingInboxView .signing-inbox-layout {
+    display: block;
+    overflow: auto;
+  }
+
+  #signingInboxView .signing-inbox-panel {
+    overflow: visible;
+    border-right: 0;
+  }
+
+  #signingInboxView .signing-inbox-detail-host {
+    min-height: calc(100vh - 48px);
+  }
+
+  #signDetailActions {
+    flex-wrap: nowrap;
+    justify-content: flex-start;
+    overflow-x: auto;
+    padding: 8px 12px;
+  }
+
+  #signDetailActions .genco-button {
+    flex: 0 0 auto;
+  }
+
+  .signed-file-toolbar {
+    grid-template-columns: 38px minmax(0, 1fr);
+  }
+
+  .signed-file-verified {
+    grid-column: 2;
+  }
+
+  .signed-document-preview {
+    min-height: 0;
+    padding: 24px 20px;
+  }
+
+  .signed-document-heading {
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+
+  .signed-document-preview h3 {
+    margin-top: 24px;
+  }
+
+  .signed-document-signature {
+    width: 100%;
+  }
+
   .signing-inbox-header {
     align-items: stretch;
     flex-direction: column;

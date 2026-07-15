@@ -8,11 +8,13 @@
     rel="stylesheet"
     href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20,400,0,0"
   />
-  <link rel="stylesheet" href="assets/css/styles.css" />
+  <link rel="stylesheet" href="assets/css/styles.css?v=20260715-13" />
 </head>
 
 <body>
   <div id="appLayout" class="app-layout">
+    <header class="workflow-topbar" data-power-app-header></header>
+
     <aside
       class="workflow-menu app-create-left-menu"
       data-workflow-menu
@@ -421,28 +423,7 @@
   </div>
 
   <div id="listView" class="workflow-shell screen-hidden">
-    <header class="workflow-topbar">
-      <div class="topbar-left">
-        <span class="material-symbols-outlined">apps</span>
-        <span class="topbar-product">Power Apps</span>
-        <span class="topbar-divider"></span>
-        <span class="topbar-title">WF-Trung Tâm Quản Lý Quy Trình Số</span>
-        <span class="material-symbols-outlined topbar-info">info</span>
-      </div>
-
-      <div class="topbar-actions">
-        <button class="topbar-share" type="button">
-          <span class="material-symbols-outlined">ios_share</span>
-          Share
-          <span class="material-symbols-outlined">expand_more</span>
-        </button>
-        <span class="material-symbols-outlined">fullscreen</span>
-        <span class="material-symbols-outlined">download</span>
-        <span class="material-symbols-outlined">settings</span>
-        <span class="material-symbols-outlined">help</span>
-        <span class="workflow-avatar"></span>
-      </div>
-    </header>
+    <header class="workflow-topbar" data-power-app-header></header>
 
     <div class="workflow-layout">
       <aside
@@ -938,6 +919,8 @@
   </div>
 
   <div id="signCreateView" class="sign-create-view screen-hidden">
+    <header class="workflow-topbar" data-power-app-header></header>
+
     <aside
       class="workflow-menu sign-create-left-menu"
       data-workflow-menu
@@ -1441,28 +1424,7 @@
   </div>
 
   <div id="signingInboxView" class="workflow-shell screen-hidden">
-    <header class="workflow-topbar">
-      <div class="topbar-left">
-        <span class="material-symbols-outlined">apps</span>
-        <span class="topbar-product">Power Apps</span>
-        <span class="topbar-divider"></span>
-        <span class="topbar-title">WF-Trung Tâm Quản Lý Quy Trình Số</span>
-        <span class="material-symbols-outlined topbar-info">info</span>
-      </div>
-
-      <div class="topbar-actions">
-        <button class="topbar-share" type="button">
-          <span class="material-symbols-outlined">ios_share</span>
-          Share
-          <span class="material-symbols-outlined">expand_more</span>
-        </button>
-        <span class="material-symbols-outlined">fullscreen</span>
-        <span class="material-symbols-outlined">download</span>
-        <span class="material-symbols-outlined">settings</span>
-        <span class="material-symbols-outlined">help</span>
-        <span class="workflow-avatar"></span>
-      </div>
-    </header>
+    <header class="workflow-topbar" data-power-app-header></header>
 
     <div class="signing-inbox-layout">
       <aside
@@ -1474,11 +1436,9 @@
       <main class="signing-inbox-panel">
         <header class="signing-inbox-header">
           <div>
-            <span class="signing-inbox-eyebrow">Công việc của tôi</span>
-            <h1>Trình ký cần xử lý</h1>
-            <p>Văn bản đang chờ Lê Văn Danh xem xét và ký duyệt.</p>
+            <h1>Danh sách trình ký</h1>
           </div>
-          <span class="signing-inbox-total">5 văn bản</span>
+          <span id="signingInboxTotal" class="signing-inbox-total">6 văn bản</span>
         </header>
 
         <div
@@ -1488,115 +1448,233 @@
           aria-label="Lọc nhanh công việc trình ký"
         >
           <button class="active" type="button" data-signing-inbox-filter="all">
-            Tất cả <span>5</span>
+            Tất cả <span data-signing-inbox-filter-count="all">6</span>
           </button>
-          <button type="button" data-signing-inbox-filter="waiting">
-            Chờ ký <span>3</span>
+          <button type="button" data-signing-inbox-filter="not-turn">
+            Chưa đến lượt <span data-signing-inbox-filter-count="not-turn">1</span>
           </button>
-          <button type="button" data-signing-inbox-filter="signing">
-            Đang ký <span>2</span>
+          <button type="button" data-signing-inbox-filter="needs-sign">
+            Cần ký <span data-signing-inbox-filter-count="needs-sign">1</span>
+          </button>
+          <button type="button" data-signing-inbox-filter="signed">
+            Đã ký <span data-signing-inbox-filter-count="signed">1</span>
+          </button>
+          <button type="button" data-signing-inbox-filter="rejected-sign">
+            Từ chối ký <span data-signing-inbox-filter-count="rejected-sign">1</span>
+          </button>
+          <button type="button" data-signing-inbox-filter="transferred">
+            Chuyển ký <span data-signing-inbox-filter-count="transferred">1</span>
+          </button>
+          <button type="button" data-signing-inbox-filter="stopped">
+            Đã dừng <span data-signing-inbox-filter-count="stopped">1</span>
           </button>
         </div>
 
-        <section class="signing-inbox-table" aria-label="Danh sách trình ký cần xử lý">
-          <div class="signing-inbox-table-head" aria-hidden="true">
-            <span>Mã trình ký</span>
-            <span>Trích yếu</span>
-            <span>Người trình</span>
-            <span>Hạn xử lý</span>
-            <span>Trạng thái</span>
-            <span></span>
-          </div>
-
-          <button class="signing-inbox-row" type="button" data-signing-task data-status="waiting">
-            <strong>TK-2026-0061</strong>
-            <span class="signing-inbox-title">
-              Trình ký phê duyệt kế hoạch triển khai quy trình góp ý
-              <small>QT-DU-THAO-2607-061</small>
+        <section class="signing-inbox-table" aria-label="Danh sách văn bản ký">
+          <button
+            class="signing-inbox-card"
+            type="button"
+            data-signing-task
+            data-signing-code="TK-2026-0042"
+            data-prototype-status="not-turn"
+            data-department-signer-state="pending"
+            data-leader-signer-state="pending"
+            data-primary-signer-state="pending"
+          >
+            <span class="signing-inbox-card-topline">
+              <small>TK-2026-0042</small>
             </span>
-            <span>Nguyễn Minh Anh</span>
-            <span>Hôm nay, 16:30</span>
-            <em class="waiting">Chờ ký</em>
-            <span class="material-symbols-outlined">chevron_right</span>
+            <strong class="signing-inbox-title">
+              Trình ký xin ý kiến Ban Tài chính - Kế toán
+            </strong>
+            <span class="signing-inbox-card-fields">
+              <span>
+                <span class="material-symbols-outlined">corporate_fare</span>
+                <b>Ban Pháp chế</b>
+              </span>
+              <span>
+                <span class="material-symbols-outlined">calendar_month</span>
+                <b>04/07/2026 09:15</b>
+              </span>
+            </span>
+            <span class="signing-inbox-card-status">
+              <em data-signing-inbox-status></em>
+              <span class="material-symbols-outlined">arrow_forward</span>
+            </span>
           </button>
 
-          <button class="signing-inbox-row" type="button" data-signing-task data-status="signing">
-            <strong>TK-2026-0058</strong>
-            <span class="signing-inbox-title">
-              Trình ký dự thảo quy chế phối hợp giữa các Ban
-              <small>QT-DU-THAO-2607-058</small>
+          <button
+            class="signing-inbox-card"
+            type="button"
+            data-signing-task
+            data-signing-code="TK-2026-0039"
+            data-prototype-status="needs-sign"
+            data-department-signer-state="approved"
+            data-leader-signer-state="pending"
+            data-primary-signer-state="pending"
+          >
+            <span class="signing-inbox-card-topline">
+              <small>TK-2026-0039</small>
             </span>
-            <span>Trần Quốc Huy</span>
-            <span>16/07/2026</span>
-            <em class="signing">Đang ký</em>
-            <span class="material-symbols-outlined">chevron_right</span>
+            <strong class="signing-inbox-title">
+              Trình ký phê duyệt danh sách khen thưởng
+            </strong>
+            <span class="signing-inbox-card-fields">
+              <span>
+                <span class="material-symbols-outlined">corporate_fare</span>
+                <b>Ban Tổ chức và Nhân sự</b>
+              </span>
+              <span>
+                <span class="material-symbols-outlined">calendar_month</span>
+                <b>28/06/2026 14:30</b>
+              </span>
+            </span>
+            <span class="signing-inbox-card-status">
+              <em data-signing-inbox-status></em>
+              <span class="material-symbols-outlined">arrow_forward</span>
+            </span>
           </button>
 
-          <button class="signing-inbox-row" type="button" data-signing-task data-status="waiting">
-            <strong>TK-2026-0055</strong>
-            <span class="signing-inbox-title">
+          <button
+            class="signing-inbox-card"
+            type="button"
+            data-signing-task
+            data-signing-code="TK-2026-0024"
+            data-prototype-status="signed"
+            data-department-signer-state="approved"
+            data-leader-signer-state="approved"
+            data-primary-signer-state="approved"
+          >
+            <span class="signing-inbox-card-topline">
+              <small>TK-2026-0024</small>
+            </span>
+            <strong class="signing-inbox-title">
+              Trình ký quyết định ban hành quy trình góp ý dự thảo
+            </strong>
+            <span class="signing-inbox-card-fields">
+              <span>
+                <span class="material-symbols-outlined">corporate_fare</span>
+                <b>Ban Pháp chế</b>
+              </span>
+              <span>
+                <span class="material-symbols-outlined">calendar_month</span>
+                <b>05/06/2026 10:00</b>
+              </span>
+            </span>
+            <span class="signing-inbox-card-status">
+              <em data-signing-inbox-status></em>
+              <span class="material-symbols-outlined">arrow_forward</span>
+            </span>
+          </button>
+
+          <button
+            class="signing-inbox-card"
+            type="button"
+            data-signing-task
+            data-signing-code="TK-2026-0031"
+            data-prototype-status="rejected-sign"
+            data-department-signer-state="approved"
+            data-leader-signer-state="rejected"
+            data-primary-signer-state="pending"
+          >
+            <span class="signing-inbox-card-topline">
+              <small>TK-2026-0031</small>
+            </span>
+            <strong class="signing-inbox-title">Trình ký bản dự thảo lần 1</strong>
+            <span class="signing-inbox-card-fields">
+              <span>
+                <span class="material-symbols-outlined">corporate_fare</span>
+                <b>Ban Pháp chế</b>
+              </span>
+              <span>
+                <span class="material-symbols-outlined">calendar_month</span>
+                <b>18/06/2026 15:45</b>
+              </span>
+            </span>
+            <span class="signing-inbox-card-status">
+              <em data-signing-inbox-status></em>
+              <span class="material-symbols-outlined">arrow_forward</span>
+            </span>
+          </button>
+
+          <button
+            class="signing-inbox-card"
+            type="button"
+            data-signing-task
+            data-signing-code="TK-2026-0027"
+            data-prototype-status="transferred"
+            data-department-signer-state="approved"
+            data-leader-signer-state="transferred"
+            data-primary-signer-state="pending"
+          >
+            <span class="signing-inbox-card-topline">
+              <small>TK-2026-0027</small>
+            </span>
+            <strong class="signing-inbox-title">
+              Trình ký dự thảo bổ sung sau góp ý
+            </strong>
+            <span class="signing-inbox-card-fields">
+              <span>
+                <span class="material-symbols-outlined">corporate_fare</span>
+                <b>Ban Kỹ thuật</b>
+              </span>
+              <span>
+                <span class="material-symbols-outlined">calendar_month</span>
+                <b>12/06/2026 11:10</b>
+              </span>
+            </span>
+            <span class="signing-inbox-card-status">
+              <em data-signing-inbox-status></em>
+              <span class="material-symbols-outlined">arrow_forward</span>
+            </span>
+          </button>
+
+          <button
+            class="signing-inbox-card"
+            type="button"
+            data-signing-task
+            data-signing-code="TK-2026-0048"
+            data-prototype-status="stopped"
+            data-department-signer-state="rejected"
+            data-leader-signer-state="stopped"
+            data-primary-signer-state="pending"
+          >
+            <span class="signing-inbox-card-topline">
+              <small>TK-2026-0048</small>
+            </span>
+            <strong class="signing-inbox-title">
               Trình ký văn bản dự thảo quy trình góp ý
-              <small>QT-DU-THAO-2607-055</small>
+            </strong>
+            <span class="signing-inbox-card-fields">
+              <span>
+                <span class="material-symbols-outlined">corporate_fare</span>
+                <b>Ban An toàn</b>
+              </span>
+              <span>
+                <span class="material-symbols-outlined">calendar_month</span>
+                <b>10/06/2026 16:30</b>
+              </span>
             </span>
-            <span>Nguyễn Minh Anh</span>
-            <span>17/07/2026</span>
-            <em class="waiting">Chờ ký</em>
-            <span class="material-symbols-outlined">chevron_right</span>
-          </button>
-
-          <button class="signing-inbox-row" type="button" data-signing-task data-status="signing">
-            <strong>TK-2026-0052</strong>
-            <span class="signing-inbox-title">
-              Trình ký quyết định ban hành tài liệu nội bộ
-              <small>QT-DU-THAO-2607-052</small>
+            <span class="signing-inbox-card-status">
+              <em data-signing-inbox-status></em>
+              <span class="material-symbols-outlined">arrow_forward</span>
             </span>
-            <span>Lê Thu Hương</span>
-            <span>18/07/2026</span>
-            <em class="signing">Đang ký</em>
-            <span class="material-symbols-outlined">chevron_right</span>
-          </button>
-
-          <button class="signing-inbox-row" type="button" data-signing-task data-status="waiting">
-            <strong>TK-2026-0049</strong>
-            <span class="signing-inbox-title">
-              Trình ký báo cáo tổng hợp ý kiến các đơn vị
-              <small>QT-DU-THAO-2607-049</small>
-            </span>
-            <span>Vũ Hải Nam</span>
-            <span>19/07/2026</span>
-            <em class="waiting">Chờ ký</em>
-            <span class="material-symbols-outlined">chevron_right</span>
           </button>
         </section>
       </main>
+
+      <section
+        id="signingInboxDetailHost"
+        class="signing-inbox-detail-host"
+        aria-label="Chi tiết trình ký"
+      ></section>
     </div>
   </div>
 
   <div id="signDetailView" class="workflow-shell screen-hidden">
-    <header class="workflow-topbar">
-      <div class="topbar-left">
-        <span class="material-symbols-outlined">apps</span>
-        <span class="topbar-product">Power Apps</span>
-        <span class="topbar-divider"></span>
-        <span class="topbar-title">WF-Trung Tâm Quản Lý Quy Trình Số</span>
-        <span class="material-symbols-outlined topbar-info">info</span>
-      </div>
+    <header class="workflow-topbar" data-power-app-header></header>
 
-      <div class="topbar-actions">
-        <button class="topbar-share" type="button">
-          <span class="material-symbols-outlined">ios_share</span>
-          Share
-          <span class="material-symbols-outlined">expand_more</span>
-        </button>
-        <span class="material-symbols-outlined">fullscreen</span>
-        <span class="material-symbols-outlined">download</span>
-        <span class="material-symbols-outlined">settings</span>
-        <span class="material-symbols-outlined">help</span>
-        <span class="workflow-avatar"></span>
-      </div>
-    </header>
-
-    <div class="sign-detail-layout">
+    <div id="signDetailLayout" class="sign-detail-layout">
       <aside
         class="workflow-menu"
         data-workflow-menu
@@ -1702,6 +1780,14 @@
 
             <div class="workflow-overview-actions">
               <button
+                class="genco-button genco-button--secondary genco-button--small signing-related-draft-button"
+                type="button"
+                data-open-related-draft
+              >
+                <span class="material-symbols-outlined">description</span>
+                Mở dự thảo
+              </button>
+              <button
                 class="detail-expand-button"
                 type="button"
                 title="Mở rộng chi tiết"
@@ -1767,7 +1853,7 @@
 
           <section class="signing-list-card">
             <div class="signing-list-header">
-              <h2 id="signingListTitle">Văn bản trình ký · 6</h2>
+              <h2 id="signingListTitle">Danh sách trình ký · 6</h2>
             </div>
 
             <div
@@ -1800,41 +1886,54 @@
             </div>
 
             <div id="signingCardRow" class="signing-card-row">
+              <div class="signing-card-columns" aria-hidden="true">
+                <span>Mã trình ký</span>
+                <span>Trích yếu</span>
+                <span>Trạng thái</span>
+                <span>Nhãn</span>
+                <span>Ngày tạo</span>
+              </div>
               <button class="signing-card active" type="button" data-status="draft">
                 <strong>TK-2026-0048</strong>
-                <span>Trình ký văn bản dự thảo quy trình góp ý</span>
+                <span class="signing-card-summary">Trình ký văn bản dự thảo quy trình góp ý</span>
                 <small>13/07/2026</small>
                 <em class="draft">Bản nháp</em>
+                <span class="signing-card-label is-empty" data-signing-label>-</span>
               </button>
               <button class="signing-card" type="button" data-status="waiting">
                 <strong>TK-2026-0042</strong>
-                <span>Trình ký xin ý kiến Ban Tài chính - Kế toán</span>
+                <span class="signing-card-summary">Trình ký xin ý kiến Ban Tài chính - Kế toán</span>
                 <small>04/07/2026</small>
                 <em class="blue">Chờ ký</em>
+                <span class="signing-card-label is-empty" data-signing-label>-</span>
               </button>
               <button class="signing-card" type="button" data-status="signing">
                 <strong>TK-2026-0039</strong>
-                <span>Trình ký phê duyệt danh sách khen thưởng</span>
+                <span class="signing-card-summary">Trình ký phê duyệt danh sách khen thưởng</span>
                 <small>28/06/2026</small>
                 <em class="violet">Đang ký</em>
+                <span class="signing-card-label is-empty" data-signing-label>-</span>
               </button>
               <button class="signing-card" type="button" data-status="rejected">
                 <strong>TK-2026-0031</strong>
-                <span>Trình ký bản dự thảo lần 1</span>
+                <span class="signing-card-summary">Trình ký bản dự thảo lần 1</span>
                 <small>18/06/2026</small>
-                <em class="red">Từ chối</em>
+                <em class="draft">Bản nháp</em>
+                <span class="signing-card-label returned" data-signing-label>Trả lại</span>
               </button>
               <button class="signing-card" type="button" data-status="recalled">
                 <strong>TK-2026-0027</strong>
-                <span>Trình ký dự thảo bổ sung sau góp ý</span>
+                <span class="signing-card-summary">Trình ký dự thảo bổ sung sau góp ý</span>
                 <small>12/06/2026</small>
-                <em class="gray">Thu hồi</em>
+                <em class="draft">Bản nháp</em>
+                <span class="signing-card-label recalled" data-signing-label>Thu hồi</span>
               </button>
               <button class="signing-card" type="button" data-status="signed">
                 <strong>TK-2026-0024</strong>
-                <span>Trình ký quyết định ban hành quy trình góp ý dự thảo</span>
+                <span class="signing-card-summary">Trình ký quyết định ban hành quy trình góp ý dự thảo</span>
                 <small>05/06/2026</small>
                 <em class="green">Đã ký</em>
+                <span class="signing-card-label is-empty" data-signing-label>-</span>
               </button>
             </div>
           </section>
@@ -1884,7 +1983,7 @@
 
             <div class="sign-section-block">
               <div class="sign-tabs">
-                <button class="active" type="button">Danh sách ký</button>
+                <button class="active" type="button">Tiến trình ký số</button>
                 <button type="button">Lịch sử xử lý</button>
                 <button type="button">Ghi chú</button>
               </div>
@@ -2104,8 +2203,253 @@
     </div>
   </div>
 
+  <div id="relatedSignerActionModal" class="modal-backdrop">
+    <div class="modal small related-signer-action-modal">
+      <div class="modal-header">
+        <div>
+          <h2 id="relatedSignerActionTitle" class="modal-title">Xác nhận</h2>
+          <p
+            id="relatedSignerActionDescription"
+            class="modal-description"
+          ></p>
+        </div>
+        <button
+          id="closeRelatedSignerActionModal"
+          class="icon-button"
+          type="button"
+          aria-label="Đóng popup"
+        >
+          <span class="material-symbols-outlined">close</span>
+        </button>
+      </div>
+
+      <div class="modal-body">
+        <div id="relatedSignerTextField" class="related-signer-field">
+          <label id="relatedSignerContentLabel" for="relatedSignerContent">
+            Nội dung
+          </label>
+          <textarea
+            id="relatedSignerContent"
+            rows="4"
+            maxlength="500"
+          ></textarea>
+        </div>
+
+        <fieldset
+          id="relatedSignerTransferField"
+          class="related-signer-transfer"
+          hidden
+        >
+          <legend>Người nhận chuyển ký <span>*</span></legend>
+
+          <label class="transfer-person-option">
+            <input
+              type="radio"
+              name="relatedSignerTransferPerson"
+              value="Nguyễn Hoàng Nam"
+            />
+            <span class="transfer-person-avatar">NN</span>
+            <span>
+              <strong>Nguyễn Hoàng Nam</strong>
+              <small>Phó Tổng Giám đốc · Ban lãnh đạo</small>
+            </span>
+          </label>
+
+          <label class="transfer-person-option">
+            <input
+              type="radio"
+              name="relatedSignerTransferPerson"
+              value="Trần Thu Hà"
+            />
+            <span class="transfer-person-avatar">TH</span>
+            <span>
+              <strong>Trần Thu Hà</strong>
+              <small>Thành viên HĐQT · Ban lãnh đạo</small>
+            </span>
+          </label>
+
+          <label class="transfer-person-option">
+            <input
+              type="radio"
+              name="relatedSignerTransferPerson"
+              value="Phạm Quốc Bảo"
+            />
+            <span class="transfer-person-avatar">PB</span>
+            <span>
+              <strong>Phạm Quốc Bảo</strong>
+              <small>Phó Tổng Giám đốc · Ban lãnh đạo</small>
+            </span>
+          </label>
+
+          <div class="related-signer-transfer-content">
+            <label for="relatedSignerTransferContent">Nội dung chuyển</label>
+            <textarea
+              id="relatedSignerTransferContent"
+              rows="3"
+              maxlength="500"
+              placeholder="Nhập nội dung chuyển ký"
+            ></textarea>
+          </div>
+        </fieldset>
+
+        <div id="relatedSignerActionError" class="modal-error"></div>
+      </div>
+
+      <div class="modal-footer">
+        <button
+          id="dismissRelatedSignerAction"
+          class="genco-button genco-button--secondary"
+          type="button"
+        >
+          Đóng
+        </button>
+        <button
+          id="confirmRelatedSignerAction"
+          class="genco-button genco-button--primary"
+          type="button"
+        >
+          Xác nhận
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div id="signedFileModal" class="modal-backdrop">
+    <div class="modal signed-file-modal">
+      <div class="modal-header">
+        <div>
+          <h2 class="modal-title">Xem file ký</h2>
+          <p class="modal-description">
+            Văn bản hiển thị kèm thông tin chữ ký điện tử.
+          </p>
+        </div>
+        <button
+          id="closeSignedFileModal"
+          class="icon-button"
+          type="button"
+          aria-label="Đóng file ký"
+        >
+          <span class="material-symbols-outlined">close</span>
+        </button>
+      </div>
+
+      <div class="modal-body signed-file-modal-body">
+        <section class="signed-file-viewer" aria-label="Nội dung văn bản ký">
+          <div class="signed-file-toolbar">
+            <span class="material-symbols-outlined">description</span>
+            <span>
+              <strong>Dự thảo Công văn phê duyệt chủ trương mua sắm.docx</strong>
+              <small>DOCX · 316 KB</small>
+            </span>
+            <span class="signed-file-verified">
+              <span class="material-symbols-outlined">verified</span>
+              Đã xác thực
+            </span>
+          </div>
+
+          <div class="signed-file-document-scroll">
+            <article class="signed-document-preview">
+              <div class="signed-document-heading">
+                <strong>TỔNG CÔNG TY PHÁT ĐIỆN 3</strong>
+                <span>CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM</span>
+              </div>
+              <h3>V/v phê duyệt chủ trương mua sắm thiết bị CNTT</h3>
+              <p>
+                Kính gửi: Các Ban và đơn vị liên quan thuộc Tổng công ty Phát điện 3.
+              </p>
+              <p>
+                Căn cứ nội dung hồ sơ trình ký, Tổng công ty thống nhất chủ trương và
+                giao đơn vị chủ trì triển khai các thủ tục tiếp theo theo quy định.
+              </p>
+
+              <div class="signed-document-signature">
+                <small>NGƯỜI KÝ CHÍNH</small>
+                <span class="signature-script">Lê Văn Danh</span>
+                <strong>LÊ VĂN DANH</strong>
+                <em>
+                  <span class="material-symbols-outlined">verified_user</span>
+                  Đã ký điện tử · 15/07/2026 10:30
+                </em>
+              </div>
+            </article>
+          </div>
+        </section>
+
+        <aside class="signed-file-context" aria-label="Thông tin xử lý ký">
+          <div class="signed-file-context-section">
+            <span class="signed-file-context-label">Trạng thái của bạn</span>
+            <strong
+              id="signedFilePermissionBadge"
+              class="signed-file-permission-badge"
+            >
+              Chỉ xem
+            </strong>
+            <p id="signedFilePermissionNote">
+              Bạn chỉ có quyền xem nội dung văn bản này.
+            </p>
+          </div>
+
+          <div class="signed-file-context-section signed-file-metadata">
+            <h3>Thông tin văn bản</h3>
+            <dl>
+              <div>
+                <dt>Mã trình ký</dt>
+                <dd id="signedFileSigningCode">--</dd>
+              </div>
+              <div>
+                <dt>Loại tài liệu</dt>
+                <dd>Văn bản chính</dd>
+              </div>
+              <div>
+                <dt>Hình thức ký</dt>
+                <dd>Ký số</dd>
+              </div>
+              <div>
+                <dt>Ban chủ trì</dt>
+                <dd>Ban Pháp chế</dd>
+              </div>
+            </dl>
+          </div>
+
+          <p id="signedFileTransferNote" class="signed-file-transfer-note" hidden></p>
+        </aside>
+      </div>
+
+      <div class="modal-footer signed-file-footer">
+        <p id="signedFileFooterHint">Kiểm tra kỹ nội dung trước khi thực hiện ký.</p>
+        <div class="signed-file-footer-actions">
+          <button
+            id="dismissSignedFileModal"
+            class="genco-button genco-button--secondary"
+            type="button"
+          >
+            Đóng
+          </button>
+          <button
+            id="signedFileRejectAction"
+            class="genco-button signed-file-reject-action"
+            type="button"
+            hidden
+          >
+            <span class="material-symbols-outlined">cancel</span>
+            Từ chối
+          </button>
+          <button
+            id="signedFileApproveAction"
+            class="genco-button genco-button--primary"
+            type="button"
+            hidden
+          >
+            <span class="material-symbols-outlined">check_circle</span>
+            Đồng ý
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <div id="toastArea" class="toast-area"></div>
-  <script src="assets/js/mock-data.js"></script>
-  <script src="assets/js/app.js"></script>
+  <script src="assets/js/mock-data.js?v=20260715-13"></script>
+  <script src="assets/js/app.js?v=20260715-13"></script>
 </body>
 </html>
