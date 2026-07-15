@@ -1766,6 +1766,8 @@ function updateActiveSigningStatus(statusKey) {
   badge.textContent = statusConfig.label;
   badge.className = statusConfig.cardClass;
   syncSignSummaryFromActiveCard();
+  updateSigningListCount();
+  applySigningFilter("all", false);
 }
 
 function openWorkflowFile(target, index, shouldDownload) {
@@ -1924,11 +1926,51 @@ function showSignEditScreen() {
 }
 
 function updateSigningListCount() {
-  const cardCount = document.querySelectorAll(".signing-card").length;
+  const cards = [...document.querySelectorAll(".signing-card")];
+  const cardCount = cards.length;
   const title = document.getElementById("signingListTitle");
 
   if (title) {
-    title.textContent = `Có ${cardCount} văn bản trình ký`;
+    title.textContent = `Văn bản trình ký · ${cardCount}`;
+  }
+
+  document
+    .querySelectorAll("[data-signing-filter-count]")
+    .forEach((count) => {
+      const filterKey = count.dataset.signingFilterCount;
+      count.textContent =
+        filterKey === "all"
+          ? cardCount
+          : cards.filter((card) => card.dataset.status === filterKey).length;
+    });
+}
+
+function applySigningFilter(filterKey, shouldSyncSelection = true) {
+  const cards = [...document.querySelectorAll(".signing-card")];
+  const filters = document.querySelectorAll("[data-signing-filter]");
+
+  filters.forEach((filter) => {
+    filter.classList.toggle(
+      "active",
+      filter.dataset.signingFilter === filterKey
+    );
+  });
+
+  cards.forEach((card) => {
+    card.hidden = filterKey !== "all" && card.dataset.status !== filterKey;
+  });
+
+  const activeCard = cards.find((card) => card.classList.contains("active"));
+
+  if (!activeCard?.hidden || !shouldSyncSelection) return;
+
+  activeCard.classList.remove("active");
+
+  const firstVisibleCard = cards.find((card) => !card.hidden);
+
+  if (firstVisibleCard) {
+    firstVisibleCard.classList.add("active");
+    syncSignSummaryFromActiveCard();
   }
 }
 
@@ -1961,16 +2003,10 @@ function createAdditionalSigningCard() {
     <em class="draft">Bản nháp</em>
   `;
   row.prepend(card);
-  row.scrollLeft = 0;
-  document.querySelector(".signing-list-card")?.classList.remove("show-all");
-
-  const viewAllButton = document.getElementById("signingViewAllButton");
-
-  if (viewAllButton) {
-    viewAllButton.textContent = "Xem tất cả";
-  }
+  row.scrollTop = 0;
 
   updateSigningListCount();
+  applySigningFilter("all", false);
   syncSignSummaryFromActiveCard();
 }
 
@@ -2212,11 +2248,15 @@ document.querySelectorAll("[data-expand-detail]").forEach((button) => {
 document.querySelectorAll("[data-toggle-progress]").forEach((button) => {
   button.addEventListener("click", () => {
     const overview = button.closest("[data-workflow-overview]");
+    const panel = button.closest(".draft-detail-panel");
+    const separateProgress = panel?.querySelector("[data-workflow-progress]");
+    const progressTarget = separateProgress || overview;
     const icon = button.querySelector(".material-symbols-outlined");
 
-    if (!overview || !icon) return;
+    if (!progressTarget || !icon) return;
 
-    const hidden = overview.classList.toggle("progress-hidden");
+    const hidden = progressTarget.classList.toggle("progress-hidden");
+    button.classList.toggle("active", hidden);
     icon.textContent = hidden ? "visibility" : "timeline";
     button.setAttribute(
       "aria-label",
@@ -2247,6 +2287,7 @@ document.querySelectorAll(".detail-tab").forEach((tab) => {
     const panel = tab.closest(".draft-detail-panel");
     const overview = panel?.querySelector("[data-workflow-overview]");
     const content = panel?.querySelector(".draft-detail-scroll");
+    const separateProgress = panel?.querySelector("[data-workflow-progress]");
     const toggleProgressButton = overview?.querySelector("[data-toggle-progress]");
     const toggleProgressIcon = toggleProgressButton?.querySelector(
       ".material-symbols-outlined"
@@ -2265,6 +2306,8 @@ document.querySelectorAll(".detail-tab").forEach((tab) => {
 
     if (isInfoTab) {
       overview.classList.remove("progress-hidden");
+      separateProgress?.classList.remove("progress-hidden");
+      toggleProgressButton?.classList.remove("active");
 
       if (toggleProgressIcon) {
         toggleProgressIcon.textContent = "timeline";
@@ -2332,10 +2375,7 @@ const detailActionMenu = document.getElementById("detailActionMenu");
 const stopFeedbackButton = document.getElementById("stopFeedbackButton");
 const stopFeedbackMenu = document.getElementById("stopFeedbackMenu");
 const signingCardRow = document.getElementById("signingCardRow");
-const signingListCard = document.querySelector(".signing-list-card");
-const signingViewAllButton = document.getElementById("signingViewAllButton");
-const signingSlidePrev = document.getElementById("signingSlidePrev");
-const signingSlideNext = document.getElementById("signingSlideNext");
+const signingQuickFilters = document.getElementById("signingQuickFilters");
 const signDetailActions = document.getElementById("signDetailActions");
 
 function closeDetailActionMenu() {
@@ -2543,23 +2583,12 @@ signDetailActions?.addEventListener("click", (event) => {
   }
 });
 
-function scrollSigningCards(direction) {
-  if (!signingCardRow) return;
+signingQuickFilters?.addEventListener("click", (event) => {
+  const filter = event.target.closest("[data-signing-filter]");
 
-  signingCardRow.scrollBy({
-    left: direction * Math.max(260, signingCardRow.clientWidth * 0.75),
-    behavior: "smooth"
-  });
-}
+  if (!filter || !signingQuickFilters.contains(filter)) return;
 
-signingSlidePrev?.addEventListener("click", () => scrollSigningCards(-1));
-signingSlideNext?.addEventListener("click", () => scrollSigningCards(1));
-
-signingViewAllButton?.addEventListener("click", () => {
-  if (!signingListCard) return;
-
-  const expanded = signingListCard.classList.toggle("show-all");
-  signingViewAllButton.textContent = expanded ? "Thu gọn" : "Xem tất cả";
+  applySigningFilter(filter.dataset.signingFilter);
 });
 
 signingCardRow?.addEventListener("click", (event) => {
@@ -2649,3 +2678,4 @@ renderDetailFiles("attachmentFiles");
 renderSigningFiles("main");
 renderPeople("commenters");
 renderPeople("ccUsers");
+updateSigningListCount();

@@ -1588,55 +1588,68 @@
               Lịch sử
             </button>
           </div>
-
-          <div class="workflow-steps">
-          <div class="workflow-step completed" role="button" tabindex="0" data-step="draft">
-            <span>1</span>
-            <strong>Tạo mới</strong>
-          </div>
-          <div class="workflow-step completed">
-            <span>2</span>
-            <strong>Phê duyệt</strong>
-          </div>
-          <div class="workflow-step completed">
-            <span>3</span>
-            <strong>Góp ý</strong>
-          </div>
-          <div class="workflow-step current" role="button" tabindex="0" data-step="sign">
-            <span>4</span>
-            <strong>Trình ký</strong>
-          </div>
-          <div class="workflow-step pending" role="button" tabindex="0" data-step="complete">
-            <span>5</span>
-            <strong>Hoàn thành</strong>
-          </div>
-          </div>
         </section>
 
         <div class="draft-detail-scroll sign-detail-scroll">
-          <section class="signing-list-card">
-            <div class="signing-list-header">
-              <h2 id="signingListTitle">Có 6 văn bản trình ký</h2>
-              <div class="signing-list-actions">
-                <button
-                  id="signingViewAllButton"
-                  class="signing-text-button"
-                  type="button"
-                >
-                  Xem tất cả
-                </button>
+          <section class="detail-card sign-process-card" data-workflow-progress>
+            <div class="detail-card-title">Tiến trình</div>
+            <div class="workflow-steps">
+              <div class="workflow-step completed" role="button" tabindex="0" data-step="draft">
+                <span>1</span>
+                <strong>Tạo mới</strong>
+              </div>
+              <div class="workflow-step completed">
+                <span>2</span>
+                <strong>Phê duyệt</strong>
+              </div>
+              <div class="workflow-step completed">
+                <span>3</span>
+                <strong>Góp ý</strong>
+              </div>
+              <div class="workflow-step current" role="button" tabindex="0" data-step="sign">
+                <span>4</span>
+                <strong>Trình ký</strong>
+              </div>
+              <div class="workflow-step pending" role="button" tabindex="0" data-step="complete">
+                <span>5</span>
+                <strong>Hoàn thành</strong>
               </div>
             </div>
+          </section>
 
-            <div class="signing-slider">
-              <button
-                id="signingSlidePrev"
-                class="signing-slider-button"
-                type="button"
-                aria-label="Cuộn danh sách trình ký sang trái"
-              >
-                <span class="material-symbols-outlined">chevron_left</span>
+          <section class="signing-list-card">
+            <div class="signing-list-header">
+              <h2 id="signingListTitle">Văn bản trình ký · 6</h2>
+            </div>
+
+            <div
+              id="signingQuickFilters"
+              class="signing-quick-filters"
+              role="group"
+              aria-label="Lọc nhanh danh sách trình ký"
+            >
+              <button class="active" type="button" data-signing-filter="all">
+                Tất cả <span data-signing-filter-count="all">6</span>
               </button>
+              <button type="button" data-signing-filter="draft">
+                Bản nháp <span data-signing-filter-count="draft">1</span>
+              </button>
+              <button type="button" data-signing-filter="waiting">
+                Chờ ký <span data-signing-filter-count="waiting">1</span>
+              </button>
+              <button type="button" data-signing-filter="signing">
+                Đang ký <span data-signing-filter-count="signing">1</span>
+              </button>
+              <button type="button" data-signing-filter="rejected">
+                Từ chối <span data-signing-filter-count="rejected">1</span>
+              </button>
+              <button type="button" data-signing-filter="recalled">
+                Thu hồi <span data-signing-filter-count="recalled">1</span>
+              </button>
+              <button type="button" data-signing-filter="signed">
+                Đã ký <span data-signing-filter-count="signed">1</span>
+              </button>
+            </div>
 
             <div id="signingCardRow" class="signing-card-row">
               <button class="signing-card active" type="button" data-status="draft">
@@ -1676,22 +1689,15 @@
                 <em class="green">Đã ký</em>
               </button>
             </div>
-
-              <button
-                id="signingSlideNext"
-                class="signing-slider-button"
-                type="button"
-                aria-label="Cuộn danh sách trình ký sang phải"
-              >
-                <span class="material-symbols-outlined">chevron_right</span>
-              </button>
-            </div>
           </section>
 
           <section class="detail-card sign-detail-combined-card">
             <div class="sign-summary-card">
-              <h2 id="signSummaryText">
-                Trình ký văn bản dự thảo quy trình góp ý
+              <h2 class="sign-summary-text">
+                <span class="sign-summary-label">Trích yếu trình ký:</span>
+                <span id="signSummaryText">
+                  Trình ký văn bản dự thảo quy trình góp ý
+                </span>
               </h2>
               <div class="sign-summary-actions">
                 <button class="icon-button" type="button" title="Copy">
