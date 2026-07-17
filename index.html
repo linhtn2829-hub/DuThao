@@ -8,7 +8,7 @@
     rel="stylesheet"
     href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20,400,0,0"
   />
-  <link rel="stylesheet" href="assets/css/styles.css?v=20260715-13" />
+  <link rel="stylesheet" href="assets/css/styles.css?v=20260716-6" />
 </head>
 
 <body>
@@ -1434,12 +1434,48 @@
       ></aside>
 
       <main class="signing-inbox-panel">
-        <header class="signing-inbox-header">
-          <div>
-            <h1>Danh sách trình ký</h1>
+        <header class="draft-list-header signing-inbox-header">
+          <div class="draft-list-title">
+            <span class="material-symbols-outlined">fact_check</span>
+            <strong>Danh sách trình ký</strong>
           </div>
-          <span id="signingInboxTotal" class="signing-inbox-total">6 văn bản</span>
+          <div class="signing-inbox-header-actions">
+            <span id="signingInboxTotal" class="draft-total signing-inbox-total">6</span>
+            <button
+              class="inbox-column-toggle"
+              type="button"
+              data-toggle-inbox-list
+              title="Thu gọn danh sách trình ký"
+              aria-label="Thu gọn danh sách trình ký"
+              aria-expanded="true"
+            >
+              <span class="material-symbols-outlined">left_panel_close</span>
+            </button>
+          </div>
         </header>
+
+        <div class="signing-inbox-search-row">
+          <div class="draft-search signing-inbox-search" role="search">
+            <span class="material-symbols-outlined">search</span>
+            <input
+              id="signingInboxSearch"
+              type="search"
+              placeholder="Tìm theo mã hoặc trích yếu..."
+              autocomplete="off"
+              aria-label="Tìm kiếm trình ký"
+            />
+            <button
+              id="clearSigningInboxSearch"
+              class="signing-inbox-search-clear"
+              type="button"
+              title="Xoá từ khoá"
+              aria-label="Xoá từ khoá tìm kiếm"
+              hidden
+            >
+              <span class="material-symbols-outlined">close</span>
+            </button>
+          </div>
+        </div>
 
         <div
           id="signingInboxFilters"
@@ -1661,13 +1697,29 @@
             </span>
           </button>
         </section>
+
+        <div id="signingInboxEmpty" class="signing-inbox-empty" hidden>
+          <span class="material-symbols-outlined">search_off</span>
+          Không tìm thấy trình ký phù hợp
+        </div>
       </main>
 
       <section
         id="signingInboxDetailHost"
         class="signing-inbox-detail-host"
         aria-label="Chi tiết trình ký"
-      ></section>
+      >
+        <button
+          class="inbox-column-toggle signing-inbox-detail-rail-toggle"
+          type="button"
+          data-toggle-inbox-detail
+          title="Mở chi tiết trình ký"
+          aria-label="Mở chi tiết trình ký"
+          aria-expanded="false"
+        >
+          <span class="material-symbols-outlined">right_panel_open</span>
+        </button>
+      </section>
     </div>
   </div>
 
@@ -1717,7 +1769,7 @@
             <div class="draft-title-block">
               <div class="draft-title-row workflow-title-surface">
                 <h1 id="signDetailDraftTitle" class="workflow-overview-title">
-                  67868
+                  Trình ký văn bản dự thảo quy trình góp ý
                 </h1>
 
                 <div class="workflow-title-actions">
@@ -1745,13 +1797,13 @@
               <div class="draft-detail-meta workflow-overview-meta">
                 <span class="detail-meta-item workflow-code-item">
                   <span id="signDetailDraftCode" class="workflow-code-value">
-                    QT-DU-THAO-2607-055
+                    TK-2026-0048
                   </span>
                   <button
                     class="workflow-inline-action workflow-code-copy"
                     type="button"
-                    title="Copy mã dự thảo"
-                    aria-label="Copy mã dự thảo"
+                    title="Copy mã trình ký"
+                    aria-label="Copy mã trình ký"
                     data-copy-target="signDetailDraftCode"
                   >
                     <span class="material-symbols-outlined">content_copy</span>
@@ -1759,7 +1811,7 @@
                 </span>
                 <span class="workflow-meta-separator">|</span>
                 <span class="detail-meta-item workflow-creator-item">
-                  <span class="workflow-meta-label">Người tạo :</span>
+                  <span class="workflow-meta-label">Người trình :</span>
                   <span class="creator-profile">
                     <strong id="signDetailCreatorName" class="creator-link">
                       Nguyễn Minh Anh
@@ -1797,6 +1849,16 @@
                 <span class="material-symbols-outlined">open_in_full</span>
               </button>
               <button
+                class="detail-expand-button inbox-detail-collapse-button"
+                type="button"
+                title="Thu gọn chi tiết trình ký"
+                aria-label="Thu gọn chi tiết trình ký"
+                aria-expanded="true"
+                data-toggle-inbox-detail
+              >
+                <span class="material-symbols-outlined">right_panel_close</span>
+              </button>
+              <button
                 class="detail-expand-button"
                 type="button"
                 title="Ẩn / hiện tiến trình"
@@ -1817,15 +1879,15 @@
               <span class="material-symbols-outlined">chat_bubble</span>
               Trao đổi
             </button>
-            <button class="detail-tab" type="button" data-detail-tab="history">
-              <span class="material-symbols-outlined">history</span>
-              Lịch sử
-            </button>
           </div>
         </section>
 
         <div class="draft-detail-scroll sign-detail-scroll">
-          <section class="detail-card sign-process-card" data-workflow-progress>
+          <section
+            class="detail-card sign-process-card"
+            data-workflow-progress
+            data-sign-detail-panel="info"
+          >
             <div class="detail-card-title">Tiến trình</div>
             <div class="workflow-steps">
               <div class="workflow-step completed" role="button" tabindex="0" data-step="draft">
@@ -1851,7 +1913,7 @@
             </div>
           </section>
 
-          <section class="signing-list-card">
+          <section class="signing-list-card" data-sign-detail-panel="info">
             <div class="signing-list-header">
               <h2 id="signingListTitle">Danh sách trình ký · 6</h2>
             </div>
@@ -1938,58 +2000,148 @@
             </div>
           </section>
 
-          <section class="detail-card sign-detail-combined-card">
-            <div class="sign-summary-card">
-              <h2 class="sign-summary-text">
-                <span class="sign-summary-label">Trích yếu trình ký:</span>
-                <span id="signSummaryText">
-                  Trình ký văn bản dự thảo quy trình góp ý
-                </span>
-              </h2>
-              <div class="sign-summary-actions">
-                <button class="icon-button" type="button" title="Copy">
-                  <span class="material-symbols-outlined">content_copy</span>
-                </button>
-                <button class="icon-button" type="button" title="Chia sẻ">
-                  <span class="material-symbols-outlined">share</span>
-                </button>
-              </div>
-            </div>
-
-            <div class="sign-section-block">
-              <div class="detail-card-title">Thông tin chung</div>
-              <div class="sign-info-grid">
-                <div><span>Mã trình ký</span><strong id="signDetailCodeValue">TK-2026-0048</strong></div>
-                <div><span>Trạng thái</span><strong><span id="signDetailStatus" class="sign-status-pill draft">Bản nháp</span></strong></div>
-                <div><span>Số ký hiệu</span><strong>--/Genco3-KD-TTĐ</strong></div>
-                <div><span>Phân loại</span><strong>Văn bản Tổng công ty</strong></div>
-                <div><span>Nhóm văn bản</span><strong>Văn bản đi ký số</strong></div>
-                <div><span>Loại văn bản</span><strong>Tờ trình</strong></div>
-                <div><span>Ngôn ngữ</span><strong>Tiếng Việt</strong></div>
-                <div><span>Độ mật</span><strong>Bình thường</strong></div>
-                <div><span>Độ khẩn</span><strong class="urgent-text">Thường khẩn</strong></div>
-                <div><span>Ban chủ trì</span><strong>Ban Pháp chế</strong></div>
-                <div><span>Người tạo</span><strong>Nguyễn Minh Anh</strong></div>
-                <div><span>Ngày lưu</span><strong>13/07/2026 10:30</strong></div>
-              </div>
-            </div>
-
-            <div class="sign-section-block">
-              <div class="detail-card-title">
-                Có <span id="signDetailAttachmentCount">5</span> văn bản đính kèm
-              </div>
-              <div id="signDetailFiles" class="sign-detail-file-list"></div>
-            </div>
-
-            <div class="sign-section-block">
-              <div class="sign-tabs">
-                <button class="active" type="button">Tiến trình ký số</button>
-                <button type="button">Lịch sử xử lý</button>
-                <button type="button">Ghi chú</button>
-              </div>
-              <div id="signApprovalTable" class="sign-approval-table"></div>
+          <section class="detail-card" data-sign-detail-panel="info">
+            <div class="detail-card-title">Thông tin chung</div>
+            <div class="sign-info-grid">
+              <div><span>Mã trình ký</span><strong id="signDetailCodeValue">TK-2026-0048</strong></div>
+              <div><span>Trạng thái</span><strong><span id="signDetailStatus" class="sign-status-pill draft">Bản nháp</span></strong></div>
+              <div><span>Số ký hiệu</span><strong>--/Genco3-KD-TTĐ</strong></div>
+              <div><span>Phân loại</span><strong>Văn bản Tổng công ty</strong></div>
+              <div><span>Nhóm văn bản</span><strong>Văn bản đi ký số</strong></div>
+              <div><span>Loại văn bản</span><strong>Tờ trình</strong></div>
+              <div><span>Ngôn ngữ</span><strong>Tiếng Việt</strong></div>
+              <div><span>Độ mật</span><strong>Bình thường</strong></div>
+              <div><span>Độ khẩn</span><strong class="urgent-text">Thường khẩn</strong></div>
+              <div><span>Ban chủ trì</span><strong>Ban Pháp chế</strong></div>
+              <div><span>Người trình</span><strong>Nguyễn Minh Anh</strong></div>
+              <div><span>Ngày lưu</span><strong>13/07/2026 10:30</strong></div>
             </div>
           </section>
+
+          <section class="detail-card" data-sign-detail-panel="info">
+            <div class="detail-card-title sign-attachment-title">
+              <span>Văn bản đính kèm</span>
+              <span id="signDetailAttachmentCount" class="sign-attachment-count-badge">
+                3 văn bản
+              </span>
+            </div>
+            <div id="signDetailFiles" class="sign-detail-file-list"></div>
+          </section>
+
+          <section
+            class="detail-card sign-history-section"
+            data-sign-detail-panel="info"
+          >
+            <header class="sign-history-header">
+              <div class="detail-card-title">Lịch sử trình ký</div>
+            </header>
+
+            <div class="sign-history-iterations">
+              <div
+                class="sign-history-iteration-tabs"
+                role="tablist"
+                aria-label="Các lần trình ký"
+              >
+                <button
+                  type="button"
+                  role="tab"
+                  aria-selected="false"
+                  data-sign-history-iteration="1"
+                >
+                  Lần 1
+                </button>
+                <button
+                  class="active"
+                  type="button"
+                  role="tab"
+                  aria-selected="true"
+                  data-sign-history-iteration="2"
+                >
+                  Lần 2
+                </button>
+              </div>
+              <span id="signHistoryIterationContext">Lần trình hiện tại</span>
+            </div>
+
+            <div
+              id="signHistoryTimeline"
+              class="sign-approval-table signing-timeline"
+              role="tabpanel"
+              aria-label="Lịch sử ký"
+            ></div>
+          </section>
+
+          <section
+            class="detail-card sign-detail-tab-panel sign-discussion-panel"
+            data-sign-detail-panel="discussion"
+            hidden
+          >
+            <div class="detail-card-title sign-tab-panel-title">
+              <span>Trao đổi trong luồng trình ký</span>
+              <span class="sign-tab-panel-count">5 thành viên</span>
+            </div>
+
+            <div class="sign-flow-members" aria-label="Thành viên trong luồng trình ký">
+              <span title="Nguyễn Minh Anh · Người trình">NMA</span>
+              <span title="Trần Quốc Huy · Lãnh đạo Ban chủ trì">TQH</span>
+              <span title="Nguyễn Thị Thu Hà · Ban liên quan">NTH</span>
+              <span title="Đặng Hoàng Anh · Lãnh đạo liên quan">DHA</span>
+              <span title="Lê Văn Danh · Người ký chính">LVD</span>
+              <small>Người trình, người duyệt và người ký</small>
+            </div>
+
+            <div id="signDiscussionMessages" class="sign-discussion-messages" aria-live="polite">
+              <article class="sign-message">
+                <span class="sign-message-avatar">NMA</span>
+                <div>
+                  <header>
+                    <strong>Nguyễn Minh Anh</strong>
+                    <time>13/07/2026 10:32</time>
+                  </header>
+                  <p>Nhờ các anh chị kiểm tra nội dung và số liệu trước khi ký.</p>
+                </div>
+              </article>
+              <article class="sign-message">
+                <span class="sign-message-avatar">TQH</span>
+                <div>
+                  <header>
+                    <strong>Trần Quốc Huy</strong>
+                    <time>13/07/2026 10:46</time>
+                  </header>
+                  <p>Ban Pháp chế đã rà soát, hồ sơ đủ điều kiện chuyển bước ký tiếp theo.</p>
+                </div>
+              </article>
+              <article class="sign-message is-current-user">
+                <span class="sign-message-avatar">NTH</span>
+                <div>
+                  <header>
+                    <strong>Nguyễn Thị Thu Hà</strong>
+                    <time>13/07/2026 11:05</time>
+                  </header>
+                  <p>Tôi đã nhận được hồ sơ và đang kiểm tra file ký.</p>
+                </div>
+              </article>
+            </div>
+
+            <div class="sign-discussion-composer">
+              <textarea
+                id="signDiscussionInput"
+                rows="2"
+                maxlength="500"
+                placeholder="Nhập nội dung trao đổi..."
+                aria-label="Nội dung trao đổi"
+              ></textarea>
+              <button
+                id="sendSignDiscussion"
+                class="genco-button genco-button--primary"
+                type="button"
+              >
+                <span class="material-symbols-outlined">send</span>
+                Gửi
+              </button>
+            </div>
+          </section>
+
         </div>
 
         <footer id="signDetailActions" class="draft-detail-actions sign-detail-actions">
@@ -2178,7 +2330,7 @@
   <div id="signContentModal" class="modal-backdrop">
     <div class="modal small">
       <div class="modal-header">
-        <h2 class="modal-title">Nội dung ký</h2>
+        <h2 id="signContentModalTitle" class="modal-title">Nội dung xử lý</h2>
         <button
           id="closeSignContentModal"
           class="icon-button"
@@ -2189,7 +2341,17 @@
         </button>
       </div>
       <div class="modal-body">
-        <p id="signContentModalText" class="sign-content-modal-text"></p>
+        <div class="sign-content-person">
+          <span id="signContentModalAvatar" class="sign-content-person-avatar">NA</span>
+          <div>
+            <strong id="signContentModalPerson">Nguyễn Minh Anh</strong>
+            <span id="signContentModalMeta">Chuyên viên chính · Ban Pháp chế</span>
+          </div>
+        </div>
+        <div class="sign-content-modal-detail">
+          <span id="signContentModalLabel">Nội dung xử lý</span>
+          <p id="signContentModalText" class="sign-content-modal-text"></p>
+        </div>
       </div>
       <div class="modal-footer">
         <button
@@ -2449,7 +2611,7 @@
   </div>
 
   <div id="toastArea" class="toast-area"></div>
-  <script src="assets/js/mock-data.js?v=20260715-13"></script>
-  <script src="assets/js/app.js?v=20260715-13"></script>
+  <script src="assets/js/mock-data.js?v=20260716-6"></script>
+  <script src="assets/js/app.js?v=20260716-6"></script>
 </body>
 </html>

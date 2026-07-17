@@ -10,6 +10,24 @@ const signingFiles = {
   main: []
 };
 
+const signDetailDemoFiles = [
+  {
+    name: "Du_thao_quy_trinh_gop_y_cac_Ban_VP_hoan_thien.docx",
+    size: 1180 * 1024,
+    role: "main"
+  },
+  {
+    name: "Bang_tong_hop_y_kien_gop_y_du_thao.xlsx",
+    size: 486 * 1024,
+    role: "attachment"
+  },
+  {
+    name: "Can_cu_phap_ly_va_quy_dinh_lien_quan.pdf",
+    size: 1320 * 1024,
+    role: "attachment"
+  }
+];
+
 const appLayout = document.getElementById("appLayout");
 
 let pendingConfirmAction = null;
@@ -119,7 +137,16 @@ function workflowMenuMarkup(activeKey) {
         <div class="workflow-brand-title">Genco3 Workflow</div>
         <div class="workflow-brand-subtitle">Quản lý quy trình</div>
       </div>
-      <span class="material-symbols-outlined brand-collapse">chevron_left</span>
+      <button
+        class="brand-collapse workflow-menu-collapse-toggle"
+        type="button"
+        data-toggle-inbox-menu
+        title="Thu gọn menu"
+        aria-label="Thu gọn menu"
+        aria-expanded="true"
+      >
+        <span class="material-symbols-outlined">chevron_left</span>
+      </button>
     </div>
 
     <nav class="workflow-nav" aria-label="Điều hướng quy trình">
@@ -181,6 +208,87 @@ function setWorkflowMenuActive(screenId, activeKey) {
       item.removeAttribute("aria-current");
     }
   });
+}
+
+function syncSigningInboxColumnControls() {
+  const screen = document.getElementById("signingInboxView");
+
+  if (!screen) return;
+
+  const menuCollapsed = screen.classList.contains("inbox-menu-collapsed");
+  const listCollapsed = screen.classList.contains("inbox-list-collapsed");
+  const detailCollapsed = screen.classList.contains("inbox-detail-collapsed");
+  const menuToggle = screen.querySelector("[data-toggle-inbox-menu]");
+  const listToggle = screen.querySelector("[data-toggle-inbox-list]");
+
+  if (menuToggle) {
+    menuToggle.setAttribute("aria-expanded", String(!menuCollapsed));
+    menuToggle.setAttribute(
+      "aria-label",
+      menuCollapsed ? "Mở menu" : "Thu gọn menu"
+    );
+    menuToggle.title = menuCollapsed ? "Mở menu" : "Thu gọn menu";
+    menuToggle.querySelector(".material-symbols-outlined").textContent =
+      menuCollapsed ? "chevron_right" : "chevron_left";
+  }
+
+  if (listToggle) {
+    listToggle.setAttribute("aria-expanded", String(!listCollapsed));
+    listToggle.setAttribute(
+      "aria-label",
+      listCollapsed ? "Mở danh sách trình ký" : "Thu gọn danh sách trình ký"
+    );
+    listToggle.title = listCollapsed
+      ? "Mở danh sách trình ký"
+      : "Thu gọn danh sách trình ký";
+    listToggle.querySelector(".material-symbols-outlined").textContent =
+      listCollapsed ? "right_panel_open" : "left_panel_close";
+  }
+
+  screen.querySelectorAll("[data-toggle-inbox-detail]").forEach((toggle) => {
+    toggle.setAttribute("aria-expanded", String(!detailCollapsed));
+    toggle.setAttribute(
+      "aria-label",
+      detailCollapsed ? "Mở chi tiết trình ký" : "Thu gọn chi tiết trình ký"
+    );
+    toggle.title = detailCollapsed
+      ? "Mở chi tiết trình ký"
+      : "Thu gọn chi tiết trình ký";
+  });
+}
+
+function toggleSigningInboxColumn(column) {
+  const screen = document.getElementById("signingInboxView");
+
+  if (!screen) return;
+
+  if (column === "menu") {
+    screen.classList.toggle("inbox-menu-collapsed");
+  }
+
+  if (column === "list") {
+    const willCollapse = !screen.classList.contains("inbox-list-collapsed");
+
+    screen.classList.toggle("inbox-list-collapsed", willCollapse);
+
+    if (willCollapse) {
+      screen.classList.remove("inbox-detail-collapsed");
+    }
+  }
+
+  if (column === "detail") {
+    const willCollapse = !screen.classList.contains("inbox-detail-collapsed");
+
+    screen.classList.toggle("inbox-detail-collapsed", willCollapse);
+    screen.classList.remove("workflow-detail-expanded");
+
+    if (willCollapse) {
+      screen.classList.remove("inbox-list-collapsed");
+    }
+  }
+
+  syncSigningInboxColumnControls();
+  requestAnimationFrame(drawSignHistorySegments);
 }
 
 let selectedPowerPersonFilter = "owner";
@@ -258,6 +366,7 @@ function renderPowerAppHeaders() {
 }
 
 renderWorkflowMenus();
+syncSigningInboxColumnControls();
 renderPowerAppHeaders();
 
 document.addEventListener("change", (event) => {
@@ -1639,10 +1748,16 @@ function renderSignDetailFiles() {
 
   if (!container) return;
 
-  const files = signingFiles.main.slice(0, 5);
+  if (signingFiles.main.length) {
+    ensureSingleMainSigningFile("main");
+  }
+
+  const files = signingFiles.main.length
+    ? signingFiles.main
+    : signDetailDemoFiles;
 
   if (count) {
-    count.textContent = String(files.length);
+    count.textContent = `${files.length} văn bản`;
   }
 
   container.innerHTML = files
@@ -1664,6 +1779,7 @@ function renderSignDetailFiles() {
             <span class="material-symbols-outlined">
               ${isMain ? "assignment_turned_in" : "attach_file"}
             </span>
+            <span>${isMain ? "Văn bản chính" : "Tài liệu đính kèm"}</span>
           </span>
           <div class="detail-file-actions">
             <button class="genco-button genco-button--small genco-button--icon-only detail-file-action" type="button" title="Xem">
@@ -1744,12 +1860,224 @@ const signApprovalPeople = [
 ];
 
 const signingTimelineSteps = [
-  { title: "Trình ký", people: [0] },
+  { title: "Trình văn bản", people: [0] },
   { title: "Lãnh đạo Ban chủ trì", people: [1] },
   { title: "Lãnh đạo Ban liên quan", people: [2, 3, 4] },
   { title: "Lãnh đạo liên quan", people: [5, 6] },
   { title: "Lãnh đạo phê duyệt", people: [7, 8] }
 ];
+
+const signHistoryIterationScenarios = {
+  1: "rejected"
+};
+
+const signHistoryPersonStatuses = {
+  submitted: { label: "Trình văn bản", className: "submitted", hasAction: true },
+  "not-signed": { label: "Chưa ký", className: "not-signed" },
+  "needs-sign": { label: "Cần ký", className: "needs-sign" },
+  signed: { label: "Đã ký", className: "signed", hasAction: true },
+  rejected: { label: "Từ chối ký", className: "rejected", hasAction: true },
+  transferred: {
+    label: "Chuyển người ký",
+    className: "transferred",
+    hasAction: true
+  },
+  withdrawn: { label: "Đã thu hồi", className: "withdrawn", hasAction: true },
+  draft: { label: "Dự thảo", className: "draft" },
+  authoring: { label: "Soạn thảo", className: "authoring" }
+};
+
+const signHistoryTimes = [
+  "13/07/2026 10:30",
+  "13/07/2026 10:46",
+  "13/07/2026 11:05",
+  "13/07/2026 11:32",
+  "13/07/2026 11:48",
+  "13/07/2026 13:20",
+  "13/07/2026 13:42",
+  "13/07/2026 14:15",
+  "13/07/2026 14:36"
+];
+
+const signHistorySkipReason =
+  "Không có người ký được thiết lập tại bước này. Luồng tự động chuyển sang bước tiếp theo.";
+
+function signHistoryPerson(personIndex, status, overrides = {}) {
+  const config = signHistoryPersonStatuses[status];
+  const person = signApprovalPeople[personIndex];
+
+  return {
+    personIndex,
+    status,
+    time: config?.hasAction ? signHistoryTimes[personIndex] : "",
+    content: config?.hasAction ? person.content : "",
+    ...overrides
+  };
+}
+
+function signHistoryStep(state, people = []) {
+  return { state, people };
+}
+
+function getSignHistoryScenario(scenarioKey) {
+  const submitted = () => signHistoryPerson(0, "submitted");
+  const signed = (index) => signHistoryPerson(index, "signed");
+  const notSigned = (index) => signHistoryPerson(index, "not-signed");
+  const needsSign = (index) => signHistoryPerson(index, "needs-sign");
+  const completedSteps = () => [
+    signHistoryStep("done", [submitted()]),
+    signHistoryStep("done", [signed(1)]),
+    signHistoryStep("done", [signed(2), signed(3), signed(4)]),
+    signHistoryStep("done", [signed(5), signed(6)]),
+    signHistoryStep("done", [signed(7), signed(8)])
+  ];
+
+  if (scenarioKey === "draft") {
+    return {
+      steps: [
+        signHistoryStep("active", [signHistoryPerson(0, "draft")]),
+        signHistoryStep("pending", [notSigned(1)]),
+        signHistoryStep("pending", [notSigned(2), notSigned(3), notSigned(4)]),
+        signHistoryStep("pending", [notSigned(5), notSigned(6)]),
+        signHistoryStep("pending", [notSigned(7), notSigned(8)])
+      ]
+    };
+  }
+
+  if (scenarioKey === "authoring") {
+    return {
+      steps: [
+        signHistoryStep("active", [signHistoryPerson(0, "authoring")]),
+        signHistoryStep("pending", [notSigned(1)]),
+        signHistoryStep("pending", [notSigned(2), notSigned(3), notSigned(4)]),
+        signHistoryStep("pending", [notSigned(5), notSigned(6)]),
+        signHistoryStep("pending", [notSigned(7), notSigned(8)])
+      ]
+    };
+  }
+
+  if (scenarioKey === "withdrawn") {
+    return {
+      steps: [
+        signHistoryStep("rejected", [
+          signHistoryPerson(0, "withdrawn", {
+            content: "Thu hồi hồ sơ để cập nhật nội dung văn bản."
+          })
+        ]),
+        signHistoryStep("pending", [notSigned(1)]),
+        signHistoryStep("pending", [notSigned(2), notSigned(3), notSigned(4)]),
+        signHistoryStep("pending", [notSigned(5), notSigned(6)]),
+        signHistoryStep("pending", [notSigned(7), notSigned(8)])
+      ],
+      outcome: { label: "Đã thu hồi", state: "pending", icon: "undo" }
+    };
+  }
+
+  if (scenarioKey === "skip-3") {
+    return {
+      steps: [
+        signHistoryStep("done", [submitted()]),
+        signHistoryStep("done", [signed(1)]),
+        signHistoryStep("skipped"),
+        signHistoryStep("active", [needsSign(5), notSigned(6)]),
+        signHistoryStep("pending", [notSigned(7), notSigned(8)])
+      ]
+    };
+  }
+
+  if (scenarioKey === "skip-4") {
+    return {
+      steps: [
+        signHistoryStep("done", [submitted()]),
+        signHistoryStep("done", [signed(1)]),
+        signHistoryStep("done", [signed(2), signed(3), signed(4)]),
+        signHistoryStep("skipped"),
+        signHistoryStep("active", [needsSign(7), notSigned(8)])
+      ]
+    };
+  }
+
+  if (scenarioKey === "skip-3-4") {
+    return {
+      steps: [
+        signHistoryStep("done", [submitted()]),
+        signHistoryStep("done", [signed(1)]),
+        signHistoryStep("skipped"),
+        signHistoryStep("skipped"),
+        signHistoryStep("active", [needsSign(7), notSigned(8)])
+      ]
+    };
+  }
+
+  if (scenarioKey === "rejected") {
+    return {
+      steps: [
+        signHistoryStep("done", [submitted()]),
+        signHistoryStep("done", [signed(1)]),
+        signHistoryStep("rejected", [
+          signHistoryPerson(2, "rejected", {
+            content:
+              "Đề nghị rà soát lại số liệu chi phí và hoàn thiện căn cứ pháp lý trước khi trình lại."
+          }),
+          notSigned(3),
+          notSigned(4)
+        ]),
+        signHistoryStep("pending", [notSigned(5), notSigned(6)]),
+        signHistoryStep("pending", [notSigned(7), notSigned(8)])
+      ],
+      outcome: { label: "Đã trả lại", state: "rejected", icon: "undo" }
+    };
+  }
+
+  if (scenarioKey === "transferred") {
+    return {
+      steps: [
+        signHistoryStep("done", [submitted()]),
+        signHistoryStep("done", [signed(1)]),
+        signHistoryStep("active", [
+          signHistoryPerson(2, "transferred", {
+            content: "Chuyển Trưởng phòng Nhân sự tiếp tục kiểm tra và ký văn bản.",
+            transferTo: 3
+          }),
+          signHistoryPerson(3, "needs-sign", { isTransferRecipient: true }),
+          notSigned(4)
+        ]),
+        signHistoryStep("pending", [notSigned(5), notSigned(6)]),
+        signHistoryStep("pending", [notSigned(7), notSigned(8)])
+      ]
+    };
+  }
+
+  if (["completed", "completed-transferred"].includes(scenarioKey)) {
+    const steps = completedSteps();
+
+    if (scenarioKey === "completed-transferred") {
+      steps[2] = signHistoryStep("done", [
+        signHistoryPerson(2, "transferred", {
+          content: "Chuyển Trưởng phòng Nhân sự tiếp tục kiểm tra và ký văn bản.",
+          transferTo: 3
+        }),
+        signHistoryPerson(3, "signed", { isTransferRecipient: true }),
+        signed(4)
+      ]);
+    }
+
+    return {
+      steps,
+      outcome: { label: "Hoàn thành", state: "done", icon: "check" }
+    };
+  }
+
+  return {
+    steps: [
+      signHistoryStep("done", [submitted()]),
+      signHistoryStep("done", [signed(1)]),
+      signHistoryStep("active", [needsSign(2), notSigned(3), notSigned(4)]),
+      signHistoryStep("pending", [notSigned(5), notSigned(6)]),
+      signHistoryStep("pending", [notSigned(7), notSigned(8)])
+    ]
+  };
+}
 
 const signingStatusConfig = {
   draft: {
@@ -1975,55 +2303,69 @@ function signingTimelinePersonStatus(stepIndex, position, phase, flow) {
     : { label: "Chưa đến lượt", className: "gray" };
 }
 
-function renderSigningTimelinePeople(step, stepIndex, phase, flow) {
+function renderSignHistoryPeople(step) {
   let currentGroup = "";
 
   return step.people
-    .map((personIndex, position) => {
-      const person = signApprovalPeople[personIndex];
-      const status = signingTimelinePersonStatus(
-        stepIndex,
-        position,
-        phase,
-        flow
-      );
+    .map((entry) => {
+      const person = signApprovalPeople[entry.personIndex];
+      const status = signHistoryPersonStatuses[entry.status];
       const groupMarkup =
         person.group && person.group !== currentGroup
-          ? `<div class="signing-timeline-group">${escapeHtml(person.group)}</div>`
+          ? `<div class="signing-history-group">
+               <span class="material-symbols-outlined">corporate_fare</span>
+               ${escapeHtml(person.group)}
+             </div>`
           : "";
-      const transferMarkup =
-        status.className === "violet" && person.transferTarget
-          ? `<small class="signing-timeline-transfer">
+      const transferMarkup = entry.transferTo
+          ? `<small class="signing-history-transfer">
                <span class="material-symbols-outlined">subdirectory_arrow_right</span>
-               Chuyển ký đến ${escapeHtml(person.transferTarget)}
+               ${escapeHtml(signApprovalPeople[entry.transferTo].name)}
              </small>`
           : "";
-      const viewMarkup =
-        stepIndex >= 2 && status.className === "green"
+      const transferConnector = entry.isTransferRecipient
+        ? `<div class="sign-history-transfer-connector">
+             <span class="material-symbols-outlined">subdirectory_arrow_right</span>
+             Chuyển người ký đến
+           </div>`
+        : "";
+      const contentMarkup = entry.content
           ? `<button
-               class="sign-approval-view"
+               class="signing-history-content"
                type="button"
-               data-sign-content-index="${personIndex}"
-               title="Xem nội dung"
-               aria-label="Xem nội dung ký của ${escapeHtml(person.name)}"
+               data-sign-content-index="${entry.personIndex}"
+               data-sign-history-content="${escapeHtml(entry.content)}"
+               data-sign-history-status="${escapeHtml(status.label)}"
+               data-full-content="${escapeHtml(entry.content)}"
+               aria-label="Xem nội dung xử lý của ${escapeHtml(person.name)}"
              >
                <span class="material-symbols-outlined">visibility</span>
+               <span>${escapeHtml(entry.content)}</span>
              </button>`
-          : "";
+          : `<span class="signing-history-empty">-</span>`;
+      const timeMarkup = status.hasAction && entry.time
+        ? `<time>${escapeHtml(entry.time)}</time>`
+        : "";
 
       currentGroup = person.group || currentGroup;
 
       return `
         ${groupMarkup}
-        <div class="signing-timeline-person">
-          <div class="signing-timeline-person-name">
-            <strong>${escapeHtml(person.name)}</strong>
+        ${transferConnector}
+        <div class="signing-history-person${
+          entry.isTransferRecipient ? " is-transfer-recipient" : ""
+        }">
+          <div class="signing-history-person-main">
+            <div class="signing-history-person-name">
+              <strong>${escapeHtml(person.name)}</strong>
+            </div>
+            <span>${escapeHtml(person.role)} · ${escapeHtml(person.unit)}</span>
             ${transferMarkup}
           </div>
-          <span>${escapeHtml(person.role)} · ${escapeHtml(person.unit)}</span>
-          <div class="signing-timeline-person-action">
-            ${viewMarkup}
-            <em class="${status.className}">${status.label}</em>
+          ${contentMarkup}
+          <div class="signing-history-person-status">
+            <em class="${status.className}">${escapeHtml(status.label)}</em>
+            ${timeMarkup}
           </div>
         </div>
       `;
@@ -2032,31 +2374,199 @@ function renderSigningTimelinePeople(step, stepIndex, phase, flow) {
 }
 
 function renderSignApprovalTable(statusKey) {
-  const container = document.getElementById("signApprovalTable");
+  const container = document.getElementById("signHistoryTimeline");
 
   if (!container) return;
 
-  const { flow, phases } = signingTimelineState(statusKey);
+  const selectedIteration =
+    document.querySelector("[data-sign-history-iteration].active")?.dataset
+      .signHistoryIteration || "2";
+  const statusScenario = {
+    draft: "draft",
+    rejected: "rejected",
+    recalled: "withdrawn",
+    signed: "completed"
+  }[statusKey];
+  const scenarioKey =
+    signHistoryIterationScenarios[selectedIteration] || statusScenario || "full";
+  const scenario = getSignHistoryScenario(scenarioKey);
+  const context = document.getElementById("signHistoryIterationContext");
+
+  if (context) {
+    context.textContent = scenario.outcome?.label ||
+      (selectedIteration === "2" ? "Lần trình hiện tại" : "Lần trình trước");
+  }
 
   container.className = "sign-approval-table signing-timeline";
+  container.dataset.scenario = scenarioKey;
   container.innerHTML = `
+    ${
+      scenario.outcome
+        ? `<div
+             class="sign-history-outcome ${scenario.outcome.state}"
+             data-sign-history-outcome
+             data-history-line-state="${scenario.outcome.state}"
+           >
+             <span class="sign-history-outcome-marker material-symbols-outlined">
+               ${scenario.outcome.icon}
+             </span>
+             <strong>${escapeHtml(scenario.outcome.label)}</strong>
+           </div>`
+        : ""
+    }
     ${signingTimelineSteps
-      .map((step, index) => {
-        const phase = phases[index];
+      .map((step, index) => ({
+        step,
+        index,
+        historyStep: scenario.steps[index]
+      }))
+      .reverse()
+      .map(({ step, index, historyStep }) => {
+        const isSkipped = historyStep.state === "skipped";
+        const tooltipMarkup = isSkipped
+          ? `<span
+               class="sign-history-skip-tooltip material-symbols-outlined"
+               tabindex="0"
+               role="img"
+               aria-label="Giải thích bước bị bỏ qua"
+               data-tooltip="${escapeHtml(signHistorySkipReason)}"
+             >info</span>`
+          : "";
+
         return `
-          <div class="signing-timeline-step ${phase}">
+          <div
+            class="signing-timeline-step ${historyStep.state}"
+            data-sign-history-step
+            data-history-step-index="${index}"
+            data-history-line-state="${historyStep.state}"
+          >
             <span class="signing-timeline-marker">${index + 1}</span>
             <div class="signing-timeline-card">
-              <h3>${escapeHtml(step.title)}</h3>
-              <div class="signing-timeline-people">
-                ${renderSigningTimelinePeople(step, index, phase, flow)}
+              <div class="sign-history-step-title-row">
+                <h3>${escapeHtml(step.title)}</h3>
+                ${tooltipMarkup}
               </div>
+              ${
+                isSkipped
+                  ? ""
+                  : `<div class="signing-timeline-people">
+                       ${renderSignHistoryPeople(historyStep)}
+                     </div>`
+              }
             </div>
           </div>
         `;
       })
       .join("")}
   `;
+
+  requestAnimationFrame(drawSignHistorySegments);
+}
+
+function drawSignHistorySegments() {
+  const timeline = document.getElementById("signHistoryTimeline");
+
+  if (!timeline || !timeline.offsetParent) return;
+
+  timeline
+    .querySelectorAll(".sign-history-line")
+    .forEach((line) => line.remove());
+
+  let stepNodes = [...timeline.querySelectorAll("[data-sign-history-step]")]
+    .filter((step) => !step.classList.contains("skipped"))
+    .sort(
+      (first, second) =>
+        Number(first.dataset.historyStepIndex) -
+        Number(second.dataset.historyStepIndex)
+    )
+    .map((step) => ({
+      node: step,
+      marker: step.querySelector(".signing-timeline-marker")
+    }));
+  const outcome = timeline.querySelector("[data-sign-history-outcome]");
+
+  if (outcome?.classList.contains("rejected")) {
+    const rejectedStep = stepNodes.find((step) =>
+      step.node.classList.contains("rejected")
+    );
+
+    if (rejectedStep) {
+      const rejectedStepIndex = Number(
+        rejectedStep.node.dataset.historyStepIndex
+      );
+
+      stepNodes = stepNodes.filter(
+        (step) =>
+          Number(step.node.dataset.historyStepIndex) <= rejectedStepIndex
+      );
+    }
+  }
+
+  if (outcome) {
+    stepNodes.push({
+      node: outcome,
+      marker: outcome.querySelector(".sign-history-outcome-marker")
+    });
+  }
+
+  const timelineRect = timeline.getBoundingClientRect();
+  const allMarkers = [
+    ...timeline.querySelectorAll(
+      "[data-sign-history-step] .signing-timeline-marker"
+    )
+  ];
+
+  stepNodes.slice(0, -1).forEach((from, index) => {
+    const to = stepNodes[index + 1];
+    const fromRect = from.marker.getBoundingClientRect();
+    const toRect = to.marker.getBoundingClientRect();
+    const fromY = fromRect.top + fromRect.height / 2 - timelineRect.top;
+    const toY = toRect.top + toRect.height / 2 - timelineRect.top;
+    const destinationState = to.node.dataset.historyLineState || "pending";
+    const lineX = fromRect.left + fromRect.width / 2 - timelineRect.left;
+    const rangeStart = Math.min(fromY, toY);
+    const rangeEnd = Math.max(fromY, toY);
+    const bypassGaps = allMarkers
+      .filter((marker) => marker !== from.marker && marker !== to.marker)
+      .map((marker) => {
+        const rect = marker.getBoundingClientRect();
+        const center = rect.top + rect.height / 2 - timelineRect.top;
+
+        return {
+          start: center - rect.height / 2 - 5,
+          end: center + rect.height / 2 + 5
+        };
+      })
+      .filter((gap) => gap.start > rangeStart && gap.end < rangeEnd)
+      .sort((first, second) => first.start - second.start);
+    const segments = [];
+    let segmentStart = rangeStart;
+
+    bypassGaps.forEach((gap) => {
+      if (gap.start > segmentStart) {
+        segments.push({ start: segmentStart, end: gap.start });
+      }
+
+      segmentStart = Math.max(segmentStart, gap.end);
+    });
+
+    if (segmentStart < rangeEnd) {
+      segments.push({ start: segmentStart, end: rangeEnd });
+    }
+
+    segments.forEach((segment) => {
+      const line = document.createElement("span");
+
+      line.className = `sign-history-line ${destinationState}`;
+      line.dataset.historyConnection = `${
+        from.node.dataset.historyStepIndex || "outcome"
+      }-${to.node.dataset.historyStepIndex || "outcome"}`;
+      line.style.top = `${segment.start}px`;
+      line.style.left = `${lineX}px`;
+      line.style.height = `${segment.end - segment.start}px`;
+      timeline.prepend(line);
+    });
+  });
 }
 
 const signerRoleFlow = {
@@ -2280,14 +2790,10 @@ function syncSignSummaryFromActiveCard() {
   const code = activeCard?.querySelector("strong")?.textContent.trim();
   const statusKey = activeCard?.dataset.status || "draft";
   const statusConfig = signingStatusConfig[statusKey] || signingStatusConfig.draft;
-  const summaryTarget = document.getElementById("signSummaryText");
   const overviewTitleTarget = document.getElementById("signDetailDraftTitle");
+  const overviewCodeTarget = document.getElementById("signDetailDraftCode");
   const codeTarget = document.getElementById("signDetailCodeValue");
   const statusTarget = document.getElementById("signDetailStatus");
-
-  if (summary && summaryTarget) {
-    summaryTarget.textContent = summary;
-  }
 
   if (summary && overviewTitleTarget) {
     overviewTitleTarget.textContent = summary;
@@ -2296,6 +2802,10 @@ function syncSignSummaryFromActiveCard() {
 
   if (code && codeTarget) {
     codeTarget.textContent = code;
+  }
+
+  if (code && overviewCodeTarget) {
+    overviewCodeTarget.textContent = code;
   }
 
   if (statusTarget) {
@@ -2422,6 +2932,7 @@ function mountSignDetailPanel(target) {
 
   if (panel && host && panel.parentElement !== host) {
     host.appendChild(panel);
+    requestAnimationFrame(drawSignHistorySegments);
   }
 }
 
@@ -2459,6 +2970,7 @@ function showSigningInbox() {
   syncSigningListForRole();
   syncSigningInboxForRole();
   mountSignDetailPanel("inbox");
+  syncSigningInboxColumnControls();
   document.getElementById("appLayout").classList.add("screen-hidden");
   document.getElementById("listView").classList.add("screen-hidden");
   document.getElementById("signCreateView").classList.add("screen-hidden");
@@ -2629,6 +3141,72 @@ const signingInboxStatusConfig = {
   }
 };
 
+function applySigningInboxFilters(filterKey) {
+  const tasks = [
+    ...document.querySelectorAll(".signing-inbox-table [data-signing-task]")
+  ];
+  const searchInput = document.getElementById("signingInboxSearch");
+  const clearButton = document.getElementById("clearSigningInboxSearch");
+  const emptyState = document.getElementById("signingInboxEmpty");
+  const keyword = normalizeSearchKeyword(searchInput?.value.trim() || "");
+  const activeFilter =
+    filterKey ||
+    document.querySelector("[data-signing-inbox-filter].active")?.dataset
+      .signingInboxFilter ||
+    "all";
+  const matchingSearchTasks = tasks.filter((task) => {
+    const code = task.dataset.signingCode || "";
+    const title =
+      task.querySelector(".signing-inbox-title")?.textContent.trim() || "";
+    const fields =
+      task.querySelector(".signing-inbox-card-fields")?.textContent.trim() ||
+      "";
+
+    return normalizeSearchKeyword(`${code} ${title} ${fields}`).includes(
+      keyword
+    );
+  });
+
+  tasks.forEach((task) => {
+    const matchesSearch = matchingSearchTasks.includes(task);
+    const matchesStatus =
+      activeFilter === "all" || task.dataset.status === activeFilter;
+
+    task.hidden = !matchesSearch || !matchesStatus;
+  });
+
+  document
+    .querySelectorAll("[data-signing-inbox-filter-count]")
+    .forEach((count) => {
+      const status = count.dataset.signingInboxFilterCount;
+      count.textContent = String(
+        status === "all"
+          ? matchingSearchTasks.length
+          : matchingSearchTasks.filter((task) => task.dataset.status === status)
+              .length
+      );
+    });
+
+  const visibleCount = tasks.filter((task) => !task.hidden).length;
+  const total = document.getElementById("signingInboxTotal");
+
+  if (total) {
+    total.textContent = String(matchingSearchTasks.length);
+    total.setAttribute(
+      "aria-label",
+      `${matchingSearchTasks.length} văn bản trình ký`
+    );
+  }
+
+  if (clearButton) {
+    clearButton.hidden = !searchInput?.value;
+  }
+
+  if (emptyState) {
+    emptyState.hidden = visibleCount !== 0;
+  }
+}
+
 function setActiveSigningInboxStatus(status) {
   const activeTask = document.querySelector(
     ".signing-inbox-table [data-signing-task].active"
@@ -2731,27 +3309,7 @@ function syncSigningInboxForRole() {
       );
     });
 
-  tasks.forEach((task) => {
-    task.hidden =
-      filterKey !== "all" && task.dataset.status !== filterKey;
-  });
-
-  document
-    .querySelectorAll("[data-signing-inbox-filter-count]")
-    .forEach((count) => {
-      const status = count.dataset.signingInboxFilterCount;
-      count.textContent = String(
-        status === "all"
-          ? tasks.length
-          : tasks.filter((task) => task.dataset.status === status).length
-      );
-    });
-
-  const total = document.getElementById("signingInboxTotal");
-
-  if (total) {
-    total.textContent = `${tasks.length} văn bản`;
-  }
+  applySigningInboxFilters(filterKey);
 }
 
 function createAdditionalSigningCard() {
@@ -3043,6 +3601,12 @@ document.querySelectorAll("[data-expand-detail]").forEach((button) => {
     if (!screen || !icon) return;
 
     const expanded = screen.classList.toggle("workflow-detail-expanded");
+
+    if (screen.id === "signingInboxView" && expanded) {
+      screen.classList.remove("inbox-detail-collapsed");
+      syncSigningInboxColumnControls();
+    }
+
     icon.textContent = expanded ? "close_fullscreen" : "open_in_full";
     button.setAttribute(
       "aria-label",
@@ -3050,6 +3614,22 @@ document.querySelectorAll("[data-expand-detail]").forEach((button) => {
     );
   });
 });
+
+document
+  .getElementById("signingInboxView")
+  ?.addEventListener("click", (event) => {
+    const menuToggle = event.target.closest("[data-toggle-inbox-menu]");
+    const listToggle = event.target.closest("[data-toggle-inbox-list]");
+    const detailToggle = event.target.closest("[data-toggle-inbox-detail]");
+
+    if (menuToggle) {
+      toggleSigningInboxColumn("menu");
+    } else if (listToggle) {
+      toggleSigningInboxColumn("list");
+    } else if (detailToggle) {
+      toggleSigningInboxColumn("detail");
+    }
+  });
 
 document.querySelectorAll("[data-toggle-progress]").forEach((button) => {
   button.addEventListener("click", () => {
@@ -3107,6 +3687,30 @@ document.querySelectorAll(".detail-tab").forEach((tab) => {
       .forEach((item) => item.classList.remove("active"));
 
     tab.classList.add("active");
+
+    if (panel.classList.contains("sign-detail-panel")) {
+      content.classList.remove("detail-content-hidden");
+      overview.classList.remove("tab-content-hidden");
+      panel.querySelectorAll("[data-sign-detail-panel]").forEach((section) => {
+        section.hidden =
+          section.dataset.signDetailPanel !== tab.dataset.detailTab;
+      });
+
+      if (isInfoTab) {
+        separateProgress?.classList.remove("progress-hidden");
+        toggleProgressButton?.classList.remove("active");
+
+        if (toggleProgressIcon) {
+          toggleProgressIcon.textContent = "timeline";
+        }
+
+        toggleProgressButton?.setAttribute("aria-label", "Ẩn tiến trình");
+        requestAnimationFrame(drawSignHistorySegments);
+      }
+
+      return;
+    }
+
     overview.classList.toggle("tab-content-hidden", !isInfoTab);
     content.classList.toggle("detail-content-hidden", !isInfoTab);
 
@@ -3122,6 +3726,29 @@ document.querySelectorAll(".detail-tab").forEach((tab) => {
       toggleProgressButton?.setAttribute("aria-label", "Ẩn tiến trình");
     }
   });
+});
+
+document
+  .querySelectorAll("[data-sign-history-iteration]")
+  .forEach((iterationTab) => {
+    iterationTab.addEventListener("click", () => {
+      document
+        .querySelectorAll("[data-sign-history-iteration]")
+        .forEach((item) => {
+          const isActive = item === iterationTab;
+          item.classList.toggle("active", isActive);
+          item.setAttribute("aria-selected", String(isActive));
+        });
+
+      const statusKey =
+        document.querySelector(".signing-card.active")?.dataset.status ||
+        "draft";
+      renderSignApprovalTable(statusKey);
+    });
+  });
+
+window.addEventListener("resize", () => {
+  requestAnimationFrame(drawSignHistorySegments);
 });
 
 function normalizeSearchKeyword(value) {
@@ -3184,6 +3811,10 @@ const signingCardRow = document.getElementById("signingCardRow");
 const signingQuickFilters = document.getElementById("signingQuickFilters");
 const signingInboxFilters = document.getElementById("signingInboxFilters");
 const signingInboxTable = document.querySelector(".signing-inbox-table");
+const signingInboxSearch = document.getElementById("signingInboxSearch");
+const clearSigningInboxSearch = document.getElementById(
+  "clearSigningInboxSearch"
+);
 const signDetailActions = document.getElementById("signDetailActions");
 
 function closeDetailActionMenu() {
@@ -3550,11 +4181,27 @@ function openSignedFileDecision(mode) {
   openRelatedSignerActionModal(mode);
 }
 
-function openSignContentModal(index) {
-  const content = signApprovalPeople[index]?.content;
+function openSignContentModal(index, trigger) {
+  const person = signApprovalPeople[index];
+  const content = trigger?.dataset.signHistoryContent || person?.content;
 
-  if (!content) return;
+  if (!person || !content) return;
 
+  const status = trigger?.dataset.signHistoryStatus || "";
+  const isRejected = status === "Từ chối ký";
+
+  document.getElementById("signContentModalTitle").textContent = isRejected
+    ? "Nội dung từ chối"
+    : "Nội dung xử lý";
+  document.getElementById("signContentModalLabel").textContent = isRejected
+    ? "Lý do từ chối"
+    : "Nội dung xử lý";
+  document.getElementById("signContentModalAvatar").textContent = initials(
+    person.name
+  );
+  document.getElementById("signContentModalPerson").textContent = person.name;
+  document.getElementById("signContentModalMeta").textContent =
+    `${person.role} · ${person.unit}`;
   document.getElementById("signContentModalText").textContent = content;
   document.getElementById("signContentModal").classList.add("open");
 }
@@ -3564,13 +4211,16 @@ function closeSignContentModal() {
 }
 
 document
-  .getElementById("signApprovalTable")
-  .addEventListener("click", (event) => {
+  .getElementById("signHistoryTimeline")
+  ?.addEventListener("click", (event) => {
     const viewButton = event.target.closest("[data-sign-content-index]");
 
     if (!viewButton) return;
 
-    openSignContentModal(Number(viewButton.dataset.signContentIndex));
+    openSignContentModal(
+      Number(viewButton.dataset.signContentIndex),
+      viewButton
+    );
   });
 
 document
@@ -3766,12 +4416,52 @@ signingInboxFilters?.addEventListener("click", (event) => {
       );
     });
 
-  signingInboxTable
-    ?.querySelectorAll("[data-signing-task]")
-    .forEach((task) => {
-      task.hidden =
-        filterKey !== "all" && task.dataset.status !== filterKey;
-    });
+  applySigningInboxFilters(filterKey);
+});
+
+signingInboxSearch?.addEventListener("input", () => {
+  applySigningInboxFilters();
+});
+
+clearSigningInboxSearch?.addEventListener("click", () => {
+  signingInboxSearch.value = "";
+  applySigningInboxFilters();
+  signingInboxSearch.focus();
+});
+
+document.getElementById("sendSignDiscussion")?.addEventListener("click", () => {
+  const input = document.getElementById("signDiscussionInput");
+  const messages = document.getElementById("signDiscussionMessages");
+  const content = input?.value.trim();
+
+  if (!input || !messages || !content) {
+    input?.focus();
+    return;
+  }
+
+  const message = document.createElement("article");
+  const timestamp = new Intl.DateTimeFormat("vi-VN", {
+    day: "2-digit",
+    month: "2-digit",
+    year: "numeric",
+    hour: "2-digit",
+    minute: "2-digit"
+  }).format(new Date());
+
+  message.className = "sign-message is-current-user";
+  message.innerHTML = `
+    <span class="sign-message-avatar">NTH</span>
+    <div>
+      <header>
+        <strong>Nguyễn Thị Thu Hà</strong>
+        <time>${escapeHtml(timestamp)}</time>
+      </header>
+      <p>${escapeHtml(content)}</p>
+    </div>
+  `;
+  messages.appendChild(message);
+  input.value = "";
+  message.scrollIntoView({ behavior: "smooth", block: "nearest" });
 });
 
 signingInboxTable?.addEventListener("click", (event) => {
